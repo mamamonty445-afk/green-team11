@@ -1,0 +1,2165 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>กองทุนเงินค่าสีเขียว — FLIPCYBER</title>
+<meta name="description" content="ระบบบริหารจัดการกองทุนเงินค่าสีเขียว FLIPCYBER — บันทึกรายรับ-รายจ่าย ดูสถิติแบบ Real-time">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --g1:#00ff87;--g2:#00c96e;--g3:#00a855;--g4:#007a3d;--g5:#004d26;
+  --dark:#040d08;--dark2:#071510;--dark3:#0c1e14;--dark4:#112819;
+  --card:#0a1c11;--card2:#0e2416;--card3:#12291a;--card4:#162e1e;
+  --border:rgba(0,255,135,0.10);--border2:rgba(0,255,135,0.22);--border3:rgba(0,255,135,0.38);
+  --text:#e8fdf0;--text2:#9dd4b0;--text3:#4e8566;--text4:#2d5040;
+  --gold:#ffd700;--gold2:#ffb800;--goldb:rgba(255,215,0,0.28);
+  --red:#ff4d6d;--red2:rgba(255,77,109,0.10);--rdb:rgba(255,77,109,0.25);
+  --blue:#00b4ff;--blue2:rgba(0,180,255,0.12);
+  --purple:#c084fc;--purple2:rgba(192,132,252,0.12);
+  --warn:#ff9800;--warn2:rgba(255,152,0,0.10);
+  --shadow:0 8px 32px rgba(0,0,0,0.5);
+  --radius:18px;--radius-sm:12px;--radius-xs:8px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Kanit',sans-serif;background:var(--dark);color:var(--text);min-height:100vh;overflow-x:hidden;line-height:1.5}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,135,0.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,135,0.025) 1px,transparent 1px);background-size:64px 64px;pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;top:-40%;left:-20%;width:140%;height:140%;background:radial-gradient(ellipse at 25% 15%,rgba(0,200,110,0.09) 0%,transparent 55%),radial-gradient(ellipse at 75% 85%,rgba(0,140,60,0.07) 0%,transparent 50%);pointer-events:none;z-index:0}
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;border-radius:50%;animation:pfloat linear infinite;opacity:0}
+@keyframes pfloat{0%{transform:translateY(105vh) scale(0);opacity:0}8%{opacity:.8}90%{opacity:.2}100%{transform:translateY(-10vh) scale(1.8);opacity:0}}
+
+/* ── LOADING ── */
+#loadingOverlay{position:fixed;inset:0;background:var(--dark);display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column;gap:20px;transition:opacity .6s,visibility .6s}
+#loadingOverlay.hide{opacity:0;visibility:hidden}
+.load-icon{font-size:60px;animation:loadPulse 1.2s ease-in-out infinite}
+@keyframes loadPulse{0%,100%{transform:scale(1);filter:drop-shadow(0 0 8px #00ff87)}50%{transform:scale(1.15);filter:drop-shadow(0 0 24px #00ff87)}}
+.load-text{font-size:18px;font-weight:700;color:var(--g1)}
+.load-sub{font-size:13px;color:var(--text3);margin-top:-8px}
+.load-track{width:220px;height:3px;background:rgba(0,255,135,0.08);border-radius:100px;overflow:hidden}
+.load-progress{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--g4),var(--g1));animation:loadSlide 1.4s ease-in-out infinite}
+@keyframes loadSlide{0%{width:0%;margin-left:0}50%{width:65%}100%{width:0%;margin-left:100%}}
+
+/* ── APP ── */
+#appScreen{min-height:100vh;padding-bottom:80px;position:relative;z-index:1}
+
+/* ── TOPBAR ── */
+.topbar{background:rgba(7,21,16,0.92);backdrop-filter:blur(16px) saturate(1.8);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--g4),transparent);opacity:.6}
+.tb-left{display:flex;align-items:center;gap:12px}
+.tb-logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--g5),var(--g2));display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 0 0 1px var(--border2),0 4px 16px rgba(0,200,100,0.2);position:relative;overflow:hidden}
+.tb-logo::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent,rgba(255,255,255,0.08))}
+.tb-name{font-size:15px;font-weight:800;background:linear-gradient(135deg,var(--g1),var(--g2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tb-ver{font-size:10px;color:var(--text3);letter-spacing:1px;line-height:1;margin-top:1px}
+.tb-right{display:flex;align-items:center;gap:8px}
+.user-chip{display:flex;align-items:center;gap:6px;background:rgba(0,255,135,0.05);border:1px solid var(--border2);border-radius:100px;padding:5px 12px 5px 6px;transition:border-color .2s}
+.user-chip:hover{border-color:var(--border3)}
+.user-avatar{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--g5),var(--g3));display:flex;align-items:center;justify-content:center;font-size:12px}
+.user-name{color:var(--text2);font-size:13px}
+.role-tag{font-size:10px;padding:2px 7px;border-radius:100px;font-weight:700;letter-spacing:.5px;background:rgba(0,255,135,0.12);color:var(--g1);border:1px solid var(--border2);transition:all .3s}
+.role-tag.admin{background:rgba(255,215,0,0.15);color:var(--gold);border-color:var(--goldb)}
+.btn-icon{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:var(--text2);width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.btn-icon:hover{background:rgba(255,255,255,0.08);color:var(--text);border-color:var(--border2)}
+.btn-icon.login{color:var(--g2);border-color:var(--border2)}
+.btn-icon.login:hover{background:rgba(0,255,135,0.08);color:var(--g1)}
+.btn-icon.logout{color:var(--red);border-color:var(--rdb)}
+.btn-icon.logout:hover{background:var(--red2)}
+
+/* ── TABS ── */
+.nav-wrap{background:rgba(4,13,8,0.7);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);position:sticky;top:57px;z-index:90}
+.nav-tabs{display:flex;gap:2px;padding:10px 16px 0;overflow-x:auto;-ms-overflow-style:none;scrollbar-width:none}
+.nav-tabs::-webkit-scrollbar{display:none}
+.nav-tab{padding:9px 14px;border-radius:10px 10px 0 0;font-family:'Kanit',sans-serif;font-size:12.5px;color:var(--text3);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;transition:all .22s;white-space:nowrap;font-weight:500;position:relative}
+.nav-tab.active{color:var(--g1);border-bottom-color:var(--g1);background:rgba(0,255,135,0.05)}
+.nav-tab:hover:not(.active){color:var(--text2);background:rgba(0,255,135,0.03)}
+.nav-notif{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;border-radius:100px;background:var(--red);color:#fff;font-size:10px;font-weight:700;margin-left:4px;padding:0 4px}
+
+/* ── CONTENT ── */
+.tab-content{display:none;padding:20px;animation:tabIn .3s ease both}
+.tab-content.active{display:block}
+@keyframes tabIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.inner{max-width:900px;margin:0 auto}
+
+/* ── BANNERS ── */
+.banner{border-radius:var(--radius-sm);padding:11px 16px;font-size:13px;margin-bottom:16px;display:flex;align-items:center;gap:10px;border:1px solid}
+.banner.warn{background:var(--warn2);border-color:rgba(255,152,0,0.25);color:var(--warn)}
+.banner.info{background:var(--blue2);border-color:rgba(0,180,255,0.2);color:var(--blue)}
+.banner.ok{background:rgba(0,255,135,0.06);border-color:var(--border2);color:var(--g2)}
+
+/* ── COUNTDOWN ── */
+.countdown-card{background:linear-gradient(145deg,#0a1a20,#0d2530);border:1px solid rgba(0,180,255,0.25);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;position:relative;overflow:hidden}
+.countdown-card::before{content:'';position:absolute;top:-40px;right:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(0,180,255,0.08),transparent 70%)}
+.countdown-card::after{content:'🏆';position:absolute;right:14px;bottom:-8px;font-size:80px;opacity:.06;line-height:1}
+.cd-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.cd-title{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.5px}
+.cd-event-name{font-size:11px;color:var(--text3);margin-top:2px}
+.cd-edit-btn{background:rgba(0,180,255,0.08);border:1px solid rgba(0,180,255,0.2);color:var(--blue);font-family:'Kanit',sans-serif;font-size:12px;padding:4px 12px;border-radius:100px;cursor:pointer;transition:all .2s;display:none}
+.cd-edit-btn:hover{background:rgba(0,180,255,0.15)}
+.admin-mode .cd-edit-btn{display:block}
+.cd-boxes{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.cd-box{background:rgba(0,0,0,0.3);border:1px solid rgba(0,180,255,0.2);border-radius:var(--radius-sm);padding:14px 12px;text-align:center;min-width:68px;flex:1}
+.cd-num{font-size:clamp(24px,5vw,36px);font-weight:900;color:var(--blue);line-height:1;font-variant-numeric:tabular-nums}
+.cd-lbl{font-size:10px;color:var(--text3);margin-top:4px;letter-spacing:1px}
+.cd-done{text-align:center;font-size:18px;font-weight:700;color:var(--gold);padding:10px}
+.cd-no-date{text-align:center;font-size:13px;color:var(--text3);padding:10px}
+
+/* ── BALANCE HERO ── */
+.balance-hero{background:linear-gradient(145deg,var(--card) 0%,var(--card4) 100%);border:1px solid var(--border2);border-radius:24px;padding:28px 28px 24px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,0.04)}
+.balance-hero::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(0,255,135,0.12),transparent 65%);pointer-events:none}
+.balance-hero::after{content:'💚';position:absolute;right:20px;bottom:-16px;font-size:120px;opacity:.04;pointer-events:none;line-height:1}
+.bh-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px}
+.bh-label{font-size:11px;color:var(--text3);letter-spacing:2.5px;text-transform:uppercase;display:flex;align-items:center;gap:6px}
+.bh-label::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--g1);display:block;animation:blink 2s ease-in-out infinite;flex-shrink:0}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 6px var(--g1)}50%{opacity:.4;box-shadow:none}}
+.bh-trend{font-size:12px;padding:4px 10px;border-radius:100px;font-weight:600}
+.bh-trend.up{background:rgba(0,255,135,0.1);color:var(--g1);border:1px solid var(--border2)}
+.bh-trend.dn{background:var(--red2);color:var(--red);border:1px solid var(--rdb)}
+.bal-amount{font-size:clamp(40px,8vw,72px);font-weight:900;color:var(--g1);line-height:1;margin:8px 0 2px;font-variant-numeric:tabular-nums;text-shadow:0 0 40px rgba(0,255,135,0.25)}
+.bal-unit{font-size:15px;color:var(--text2);font-weight:300;margin-bottom:20px}
+.bal-progress-hdr{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:7px}
+.bal-bar{height:5px;background:rgba(255,255,255,0.05);border-radius:100px;overflow:hidden;margin-bottom:16px}
+.bal-bar-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--g5),var(--g3),var(--g1));transition:width 1.6s cubic-bezier(.16,1,.3,1);position:relative;box-shadow:0 0 12px var(--g3)}
+.bal-bar-fill::after{content:'';position:absolute;right:-1px;top:50%;transform:translateY(-50%);width:11px;height:11px;background:var(--g1);border-radius:50%;box-shadow:0 0 12px var(--g1),0 0 24px rgba(0,255,135,0.4)}
+.bal-footer{display:flex;gap:20px;flex-wrap:wrap}
+.bal-meta{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:5px}
+.bal-meta strong{color:var(--text2)}
+
+/* ── GOAL ── */
+.goal-card{background:linear-gradient(145deg,var(--card),rgba(18,20,8,0.9));border:1px solid rgba(255,215,0,0.14);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px;position:relative;overflow:hidden;box-shadow:var(--shadow),inset 0 1px 0 rgba(255,215,0,0.04)}
+.goal-card::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,215,0,0.07),transparent 70%)}
+.goal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.goal-hdr-title{font-size:14px;font-weight:700;color:var(--gold)}
+.goal-hdr-name{font-size:11px;color:var(--text3);margin-top:1px}
+.goal-numbers{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.goal-current{font-size:28px;font-weight:800;color:var(--g1);font-variant-numeric:tabular-nums}
+.goal-sep{font-size:16px;color:var(--text4)}
+.goal-target{font-size:16px;font-weight:700;color:var(--gold)}
+.goal-unit{font-size:13px;color:var(--text3)}
+.goal-bar{height:9px;background:rgba(255,255,255,0.05);border-radius:100px;overflow:hidden;margin-bottom:8px}
+.goal-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,#6b4f00,var(--gold2),#ffe566);transition:width 1.6s cubic-bezier(.16,1,.3,1);box-shadow:0 0 10px rgba(255,215,0,0.3)}
+.goal-pct-row{display:flex;justify-content:space-between;align-items:center}
+.goal-pct{font-size:13px;color:var(--text3)}
+.goal-pct strong{color:var(--gold);font-size:16px}
+.goal-remaining{font-size:12px;color:var(--text3)}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.stat-c{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 16px;transition:all .25s;position:relative;overflow:hidden;cursor:default}
+.stat-c::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent,var(--g2)),transparent);opacity:0;transition:opacity .3s}
+.stat-c::after{content:attr(data-icon);position:absolute;right:10px;bottom:6px;font-size:32px;opacity:.06;line-height:1;transition:opacity .3s}
+.stat-c:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.35)}
+.stat-c:hover::before{opacity:1}
+.stat-c:hover::after{opacity:.12}
+.stat-c.in{--accent:#00ff87}.stat-c.out{--accent:#ff4d6d}.stat-c.txn{--accent:#00b4ff}.stat-c.today{--accent:#ffd700}.stat-c.avg{--accent:#c084fc}.stat-c.mem{--accent:#00ff87}
+.stat-lbl{font-size:10.5px;color:var(--text3);letter-spacing:1.2px;text-transform:uppercase;margin-bottom:8px;font-weight:600}
+.stat-val{font-size:clamp(18px,3vw,24px);font-weight:800;font-variant-numeric:tabular-nums;line-height:1;margin-bottom:4px}
+.stat-val.green{color:var(--g1)}.stat-val.red{color:var(--red)}.stat-val.blue{color:var(--blue)}.stat-val.gold{color:var(--gold)}.stat-val.purple{color:var(--purple)}
+.stat-sub{font-size:11px;color:var(--text4)}
+
+/* ── COLOR TEAM SECTION ── */
+.team-color-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}
+.team-color-card{border-radius:var(--radius-sm);padding:14px 16px;border:1px solid;transition:all .25s;cursor:default;position:relative;overflow:hidden}
+.team-color-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,0.4)}
+.team-color-card.red{background:rgba(255,60,60,0.08);border-color:rgba(255,80,80,0.3)}
+.team-color-card.blue{background:rgba(0,100,255,0.08);border-color:rgba(0,120,255,0.3)}
+.team-color-card.yellow{background:rgba(255,215,0,0.08);border-color:rgba(255,215,0,0.3)}
+.team-color-card.green{background:rgba(0,200,100,0.08);border-color:rgba(0,200,100,0.3)}
+.team-color-card.white{background:rgba(220,220,220,0.06);border-color:rgba(200,200,200,0.25)}
+.team-color-card.orange{background:rgba(255,140,0,0.08);border-color:rgba(255,140,0,0.3)}
+.team-color-card.purple{background:rgba(160,80,255,0.08);border-color:rgba(160,80,255,0.3)}
+.tc-emoji{font-size:28px;margin-bottom:6px}
+.tc-name{font-size:13px;font-weight:700;margin-bottom:4px}
+.tc-name.red{color:#ff6060}.tc-name.blue{color:#5090ff}.tc-name.yellow{color:var(--gold)}.tc-name.green{color:var(--g1)}.tc-name.white{color:#ddd}.tc-name.orange{color:#ff9800}.tc-name.purple{color:var(--purple)}
+.tc-cnt{font-size:11px;color:var(--text3)}
+.tc-paid{font-size:12px;font-weight:600;margin-top:4px}
+.tc-bar{height:4px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden;margin-top:6px}
+.tc-bar-fill{height:100%;border-radius:100px;transition:width 1.4s cubic-bezier(.16,1,.3,1)}
+.tc-bar-fill.red{background:#ff6060}.tc-bar-fill.blue{background:#5090ff}.tc-bar-fill.yellow{background:var(--gold)}.tc-bar-fill.green{background:var(--g1)}.tc-bar-fill.white{background:#ccc}.tc-bar-fill.orange{background:#ff9800}.tc-bar-fill.purple{background:var(--purple)}
+
+/* ── PER-PERSON SUMMARY ── */
+.perperson-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;margin-bottom:14px}
+.perperson-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.pp-item{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+.pp-label{font-size:12px;color:var(--text3)}
+.pp-val{font-size:15px;font-weight:800;color:var(--g1);font-variant-numeric:tabular-nums}
+
+/* ── ACTION BUTTONS ── */
+.act-grid{display:none;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.btn-act{border:none;border-radius:var(--radius);padding:16px 20px;font-family:'Kanit',sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .25s;position:relative;overflow:hidden;letter-spacing:.4px}
+.btn-act:active{transform:scale(.96)}
+.btn-act-add{background:linear-gradient(145deg,#005c30,#00a855);color:#fff;box-shadow:0 4px 20px rgba(0,150,80,0.3),inset 0 1px 0 rgba(255,255,255,0.12)}
+.btn-act-add:hover{box-shadow:0 8px 32px rgba(0,168,85,0.5);transform:translateY(-1px)}
+.btn-act-ded{background:linear-gradient(145deg,#6b1020,#c0273f);color:#fff;box-shadow:0 4px 20px rgba(180,40,60,0.3),inset 0 1px 0 rgba(255,255,255,0.10)}
+.btn-act-ded:hover{box-shadow:0 8px 32px rgba(210,50,80,0.5);transform:translateY(-1px)}
+
+/* ── FAB ── */
+.fab-group{position:fixed;bottom:24px;right:20px;z-index:80;display:none;flex-direction:column-reverse;gap:10px;align-items:flex-end}
+.fab{width:52px;height:52px;border-radius:16px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .25s;box-shadow:var(--shadow);transform:scale(0);opacity:0}
+.fab.show{transform:scale(1);opacity:1}
+.fab-main{width:58px;height:58px;border-radius:18px;font-size:26px;background:linear-gradient(145deg,var(--g5),var(--g2));box-shadow:0 8px 28px rgba(0,168,85,0.45)!important;transform:scale(1)!important;opacity:1!important}
+.fab-add{background:linear-gradient(145deg,#005c30,#00a855);color:#fff;transition-delay:.05s}
+.fab-ded{background:linear-gradient(145deg,#6b1020,#c0273f);color:#fff;transition-delay:.1s}
+
+/* ── SECTION CARD ── */
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:16px}
+.section-hdr{padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.section-hdr-title{font-size:14.5px;font-weight:700;color:var(--g2);display:flex;align-items:center;gap:7px}
+.badge{font-size:11px;background:rgba(0,255,135,0.08);border:1px solid var(--border2);color:var(--g2);padding:3px 10px;border-radius:100px;white-space:nowrap}
+.badge.red{background:rgba(255,77,109,0.08);border-color:var(--rdb);color:var(--red)}
+.badge.gold{background:rgba(255,215,0,0.08);border-color:var(--goldb);color:var(--gold)}
+.badge.warn{background:var(--warn2);border-color:rgba(255,152,0,0.25);color:var(--warn)}
+
+/* ── SEARCH ── */
+.search-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.search-input-wrap{flex:1;min-width:180px;position:relative}
+.search-input-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.4;width:16px;height:16px}
+.search-input{width:100%;background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:10px 14px 10px 36px;font-family:'Kanit',sans-serif;font-size:13.5px;color:var(--text);outline:none;transition:all .2s}
+.search-input:focus{border-color:var(--g3);box-shadow:0 0 0 3px rgba(0,168,85,0.10)}
+.search-input::placeholder{color:var(--text3)}
+.filter-sel{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:10px 12px;font-family:'Kanit',sans-serif;font-size:13.5px;color:var(--text);outline:none;cursor:pointer;-webkit-appearance:none;appearance:none}
+.filter-sel:focus{border-color:var(--g3)}
+
+/* ── HISTORY ── */
+.history-wrap{max-height:500px;overflow-y:auto;overscroll-behavior:contain}
+.history-wrap::-webkit-scrollbar{width:3px}
+.history-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.h-item{padding:14px 18px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:42px 1fr auto;gap:12px;align-items:center;transition:background .15s;animation:hIn .3s ease both;cursor:default;position:relative}
+@keyframes hIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.h-item:hover{background:var(--card2)}
+.h-item:last-child{border-bottom:none}
+.h-dot{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;transition:transform .2s}
+.h-item:hover .h-dot{transform:scale(1.08)}
+.h-dot.in{background:rgba(0,255,135,0.10);border:1px solid rgba(0,255,135,0.25)}
+.h-dot.out{background:rgba(255,77,109,0.10);border:1px solid rgba(255,77,109,0.25)}
+.h-dot.rst{background:rgba(255,215,0,0.10);border:1px solid rgba(255,215,0,0.25)}
+.h-info{min-width:0}
+.h-name{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.h-room{font-size:11px;color:var(--text3)}
+.h-reason{font-size:12px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
+.h-cat-tag{font-size:10px;padding:1px 7px;border-radius:100px;background:rgba(0,180,255,0.10);border:1px solid rgba(0,180,255,0.2);color:var(--blue);margin-top:3px;display:inline-block}
+.h-right{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.h-val{font-size:15px;font-weight:800;font-variant-numeric:tabular-nums}
+.h-val.in{color:var(--g1)}.h-val.out{color:var(--red)}.h-val.rst{color:var(--gold)}
+.h-time{font-size:11px;color:var(--text3)}
+.h-del-btn{display:none;background:var(--red2);border:1px solid var(--rdb);color:var(--red);width:22px;height:22px;border-radius:6px;cursor:pointer;font-size:12px;align-items:center;justify-content:center;font-family:monospace;flex-shrink:0;transition:all .2s}
+.h-del-btn:hover{background:rgba(255,77,109,0.25)}
+.admin-mode .h-del-btn{display:flex}
+.slip-link{font-size:12px;color:var(--blue);text-decoration:none;display:flex;align-items:center;gap:4px;margin-top:3px}
+.slip-link:hover{text-decoration:underline}
+.empty-state{text-align:center;padding:56px 20px;color:var(--text3)}
+.empty-icon{font-size:44px;margin-bottom:12px;opacity:.35;display:block}
+.empty-title{font-size:15px;color:var(--text2);margin-bottom:4px}
+.empty-sub{font-size:13px}
+
+/* ── ANNOUNCEMENTS ── */
+.ann-item{padding:18px 20px;border-bottom:1px solid var(--border);animation:hIn .3s ease both;position:relative;transition:background .15s}
+.ann-item:hover{background:var(--card2)}
+.ann-item:last-child{border-bottom:none}
+.ann-item.pinned{background:rgba(255,215,0,0.03);border-left:3px solid var(--gold)}
+.ann-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+.ann-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.ann-pin-badge{font-size:10px;padding:2px 8px;border-radius:100px;background:rgba(255,215,0,0.12);color:var(--gold);border:1px solid var(--goldb);font-weight:700}
+.ann-type-badge{font-size:10px;padding:2px 8px;border-radius:100px;font-weight:700}
+.ann-type-badge.important{background:rgba(255,77,109,0.12);color:var(--red);border:1px solid var(--rdb)}
+.ann-type-badge.info{background:var(--blue2);color:var(--blue);border:1px solid rgba(0,180,255,0.25)}
+.ann-type-badge.normal{background:rgba(0,255,135,0.08);color:var(--g2);border:1px solid var(--border2)}
+.ann-by{font-size:11px;color:var(--text3)}
+.ann-actions{display:none;gap:6px}
+.admin-mode .ann-actions{display:flex}
+.ann-del-btn{background:var(--red2);border:1px solid var(--rdb);color:var(--red);width:26px;height:26px;border-radius:8px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;font-family:monospace;transition:all .2s}
+.ann-del-btn:hover{background:rgba(255,77,109,0.25)}
+.ann-pin-btn{background:rgba(255,215,0,0.08);border:1px solid var(--goldb);color:var(--gold);width:26px;height:26px;border-radius:8px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.ann-pin-btn:hover{background:rgba(255,215,0,0.15)}
+.ann-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px}
+.ann-body{font-size:13.5px;color:var(--text2);line-height:1.7;white-space:pre-wrap}
+.ann-footer{margin-top:10px;font-size:11px;color:var(--text3)}
+.ann-add-btn{width:100%;padding:13px;border-radius:var(--radius-sm);border:1px dashed var(--border2);background:transparent;color:var(--g2);font-family:'Kanit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;margin-bottom:14px;display:none}
+.ann-add-btn:hover{background:rgba(0,255,135,0.05);border-color:var(--border3)}
+.admin-mode .ann-add-btn{display:block}
+
+/* ── MEMBERS ── */
+.mem-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.mem-sum-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;text-align:center;transition:all .25s}
+.mem-sum-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.mem-sum-num{font-size:28px;font-weight:800;line-height:1;margin-bottom:4px}
+.mem-sum-lbl{font-size:11px;color:var(--text3);letter-spacing:.5px}
+.mem-controls{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.mem-add-btn{padding:10px 16px;border-radius:var(--radius-xs);border:1px solid var(--border2);background:rgba(0,255,135,0.05);color:var(--g2);font-family:'Kanit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;display:none}
+.mem-add-btn:hover{background:rgba(0,255,135,0.10);color:var(--g1)}
+.admin-mode .mem-add-btn{display:block}
+.mem-import-btn,.btn-reminder{padding:10px 16px;border-radius:var(--radius-xs);border:1px solid var(--border);background:transparent;color:var(--text2);font-family:'Kanit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;display:none}
+.mem-import-btn:hover,.btn-reminder:hover{background:var(--card2);color:var(--text)}
+.admin-mode .mem-import-btn{display:block}
+.btn-reminder{display:block;border-color:rgba(255,152,0,0.3);color:var(--warn)}
+.btn-reminder:hover{background:var(--warn2)!important;color:var(--warn)!important}
+.mem-list{max-height:520px;overflow-y:auto;overscroll-behavior:contain}
+.mem-list::-webkit-scrollbar{width:3px}
+.mem-list::-webkit-scrollbar-thumb{background:var(--border2)}
+.mem-item{padding:13px 18px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:38px 1fr auto;gap:12px;align-items:center;transition:background .15s;animation:hIn .3s ease both}
+.mem-item:hover{background:var(--card2)}
+.mem-item:last-child{border-bottom:none}
+.mem-num{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--text3);flex-shrink:0}
+.mem-info{min-width:0}
+.mem-name{font-size:14px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mem-sub{font-size:11px;color:var(--text3);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mem-paid-amt{font-size:12px;color:var(--g2);font-variant-numeric:tabular-nums;font-weight:600}
+.mem-right{display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.mem-status-btn{padding:6px 12px;border-radius:100px;border:none;font-family:'Kanit',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap}
+.mem-status-btn.paid{background:rgba(0,255,135,0.12);color:var(--g1);border:1px solid rgba(0,255,135,0.3)}
+.mem-status-btn.unpaid{background:rgba(255,77,109,0.10);color:var(--red);border:1px solid var(--rdb)}
+.admin-mode .mem-status-btn:hover{filter:brightness(1.2);transform:scale(1.03)}
+.mem-del-btn{display:none;background:var(--red2);border:1px solid var(--rdb);color:var(--red);width:26px;height:26px;border-radius:8px;cursor:pointer;font-size:12px;align-items:center;justify-content:center;transition:all .2s}
+.mem-del-btn:hover{background:rgba(255,77,109,0.25)}
+.admin-mode .mem-del-btn{display:flex}
+.color-badge{font-size:11px;padding:2px 8px;border-radius:100px;font-weight:700;white-space:nowrap}
+.color-badge.red{background:rgba(255,80,80,0.15);color:#ff8080;border:1px solid rgba(255,80,80,0.3)}
+.color-badge.blue{background:rgba(0,120,255,0.12);color:#6090ff;border:1px solid rgba(0,120,255,0.3)}
+.color-badge.yellow{background:rgba(255,215,0,0.12);color:var(--gold);border:1px solid rgba(255,215,0,0.3)}
+.color-badge.green{background:rgba(0,200,100,0.12);color:var(--g1);border:1px solid rgba(0,200,100,0.3)}
+.color-badge.white{background:rgba(200,200,200,0.10);color:#ccc;border:1px solid rgba(200,200,200,0.25)}
+.color-badge.orange{background:rgba(255,140,0,0.12);color:#ff9800;border:1px solid rgba(255,140,0,0.3)}
+.color-badge.purple{background:rgba(160,80,255,0.12);color:var(--purple);border:1px solid rgba(160,80,255,0.3)}
+
+/* ── PROGRESS RING ── */
+.progress-ring-wrap{display:flex;align-items:center;justify-content:center;margin:16px 0}
+.progress-ring-svg{transform:rotate(-90deg)}
+.progress-ring-bg{fill:none;stroke:rgba(255,255,255,0.05);stroke-width:8}
+.progress-ring-fill{fill:none;stroke:url(#ringGrad);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.5s cubic-bezier(.16,1,.3,1)}
+.ring-label{text-anchor:middle;dominant-baseline:middle;font-family:'Kanit',sans-serif}
+
+/* ── BUDGET SYSTEM ── */
+.budget-add-btn{width:100%;padding:13px;border-radius:var(--radius-sm);border:1px dashed var(--border2);background:transparent;color:var(--g2);font-family:'Kanit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;margin-bottom:14px;display:none}
+.budget-add-btn:hover{background:rgba(0,255,135,0.05)}
+.admin-mode .budget-add-btn{display:block}
+.budget-item{padding:16px 20px;border-bottom:1px solid var(--border);animation:hIn .3s ease both;transition:background .15s}
+.budget-item:hover{background:var(--card2)}
+.budget-item:last-child{border-bottom:none}
+.budget-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:8px}
+.budget-info{flex:1;min-width:0}
+.budget-name{font-size:14px;font-weight:700;color:var(--text)}
+.budget-cat{font-size:11px;color:var(--text3);margin-top:2px}
+.budget-nums{text-align:right;flex-shrink:0}
+.budget-spent{font-size:16px;font-weight:800;font-variant-numeric:tabular-nums}
+.budget-limit{font-size:12px;color:var(--text3);margin-top:2px;font-variant-numeric:tabular-nums}
+.budget-bar-wrap{display:flex;align-items:center;gap:10px}
+.budget-bar{flex:1;height:8px;background:rgba(255,255,255,0.06);border-radius:100px;overflow:hidden}
+.budget-fill{height:100%;border-radius:100px;transition:width 1.4s cubic-bezier(.16,1,.3,1)}
+.budget-fill.ok{background:linear-gradient(90deg,var(--g4),var(--g1))}
+.budget-fill.warn{background:linear-gradient(90deg,#7a4000,var(--warn))}
+.budget-fill.over{background:linear-gradient(90deg,#7a1020,var(--red))}
+.budget-pct{font-size:12px;font-weight:700;min-width:36px;text-align:right}
+.budget-pct.ok{color:var(--g1)}.budget-pct.warn{color:var(--warn)}.budget-pct.over{color:var(--red)}
+.budget-over-badge{font-size:10px;padding:2px 8px;border-radius:100px;background:rgba(255,77,109,0.12);color:var(--red);border:1px solid var(--rdb);font-weight:700;margin-top:4px;display:inline-block}
+.budget-actions{display:none;gap:6px;align-items:center}
+.admin-mode .budget-actions{display:flex}
+.budget-del-btn{background:var(--red2);border:1px solid var(--rdb);color:var(--red);width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:12px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.budget-del-btn:hover{background:rgba(255,77,109,0.25)}
+.budget-summary{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.bs-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;text-align:center}
+.bs-num{font-size:22px;font-weight:800;margin-bottom:4px}
+.bs-lbl{font-size:11px;color:var(--text3)}
+
+/* ── AUDIT LOG ── */
+.audit-item{padding:14px 18px;border-bottom:1px solid var(--border);display:grid;grid-template-columns:40px 1fr auto;gap:12px;align-items:flex-start;animation:hIn .3s ease both;transition:background .15s}
+.audit-item:hover{background:var(--card2)}
+.audit-item:last-child{border-bottom:none}
+.audit-dot{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.audit-dot.add{background:rgba(0,255,135,0.10);border:1px solid rgba(0,255,135,0.25)}
+.audit-dot.del{background:rgba(255,77,109,0.10);border:1px solid rgba(255,77,109,0.25)}
+.audit-dot.edit{background:var(--blue2);border:1px solid rgba(0,180,255,0.25)}
+.audit-dot.reset{background:rgba(255,215,0,0.10);border:1px solid rgba(255,215,0,0.25)}
+.audit-dot.login{background:rgba(0,255,135,0.06);border:1px solid var(--border)}
+.audit-info{min-width:0}
+.audit-action{font-size:13.5px;font-weight:600;color:var(--text)}
+.audit-detail{font-size:12px;color:var(--text3);margin-top:2px;line-height:1.5}
+.audit-by{font-size:11px;color:var(--text3);margin-top:3px}
+.audit-time{text-align:right;flex-shrink:0;font-size:11px;color:var(--text3);white-space:nowrap}
+
+/* ── CHARTS ── */
+.chart-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text3);margin-bottom:14px}
+.chart-legend span{display:flex;align-items:center;gap:6px}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+
+/* ── EXPORT ── */
+.export-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.export-card{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:22px;text-align:center;transition:all .25s;cursor:pointer;position:relative;overflow:hidden}
+.export-card:hover{border-color:var(--border3);transform:translateY(-3px);box-shadow:0 10px 32px rgba(0,0,0,0.4)}
+.export-icon{font-size:34px;margin-bottom:10px;display:block}
+.export-title{font-size:14px;font-weight:700;margin-bottom:4px}
+.export-desc{font-size:12px;color:var(--text3)}
+.report-box{font-family:'Courier New',monospace;font-size:12px;color:var(--text2);line-height:1.9;white-space:pre-wrap;padding:18px 20px;background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);border:1px solid var(--border);max-height:360px;overflow-y:auto}
+.report-box::-webkit-scrollbar{width:3px}
+.report-box::-webkit-scrollbar-thumb{background:var(--border2)}
+
+/* ── MODALS ── */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:500;display:none;align-items:center;justify-content:center;padding:16px}
+.ov.show{display:flex;animation:ovIn .2s ease}
+@keyframes ovIn{from{opacity:0}to{opacity:1}}
+.modal{background:var(--dark3);border:1px solid var(--border2);border-radius:24px;width:100%;max-width:480px;position:relative;animation:modIn .35s cubic-bezier(.34,1.56,.64,1);max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,0.7),inset 0 1px 0 rgba(255,255,255,0.04)}
+.modal::-webkit-scrollbar{display:none}
+@keyframes modIn{from{opacity:0;transform:scale(.93) translateY(16px)}to{opacity:1;transform:none}}
+.modal-body{padding:28px}
+.modal-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text2);width:34px;height:34px;border-radius:10px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;font-family:monospace}
+.modal-close:hover{background:rgba(255,255,255,0.10);color:var(--text)}
+.modal-title{font-size:21px;font-weight:800;margin-bottom:3px}
+.modal-sub{font-size:13px;color:var(--text3);margin-bottom:22px}
+.f-grp{margin-bottom:16px}
+.f-grp label{display:block;font-size:11px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:7px;font-weight:600}
+.f-grp input,.f-grp textarea,.f-grp select{width:100%;background:rgba(0,0,0,0.2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:12px 14px;font-family:'Kanit',sans-serif;font-size:14px;color:var(--text);outline:none;transition:all .2s;-webkit-appearance:none;appearance:none}
+.f-grp input:focus,.f-grp textarea:focus,.f-grp select:focus{border-color:var(--g3);box-shadow:0 0 0 3px rgba(0,168,85,0.12)}
+.f-grp input::placeholder,.f-grp textarea::placeholder{color:var(--text3)}
+.f-grp textarea{resize:none;height:80px}
+.f-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.f-amt-wrap{position:relative}
+.f-pfx{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:15px;pointer-events:none}
+.f-amt-wrap input{padding-left:30px}
+.btn-submit{width:100%;padding:15px;border-radius:var(--radius-sm);border:none;font-family:'Kanit',sans-serif;font-size:16px;font-weight:800;cursor:pointer;margin-top:8px;transition:all .25s;letter-spacing:.5px;position:relative;overflow:hidden}
+.btn-submit:active{transform:scale(.97)}
+.btn-submit.add{background:linear-gradient(145deg,#005c30,#00c96e);color:#fff;box-shadow:0 6px 24px rgba(0,180,100,0.4)}
+.btn-submit.ded{background:linear-gradient(145deg,#6b1020,#d03050);color:#fff;box-shadow:0 6px 24px rgba(200,50,80,0.4)}
+.btn-submit.gold{background:linear-gradient(145deg,#7a5000,#f5c842);color:#000}
+.btn-submit.blue{background:linear-gradient(145deg,#005580,#00b4ff);color:#fff}
+.btn-submit.warn{background:linear-gradient(145deg,#7a4000,#e88000);color:#fff}
+.f-err{font-size:13px;color:var(--red);text-align:center;min-height:18px;margin-top:4px}
+.amount-preview{background:rgba(0,255,135,0.06);border:1px solid var(--border2);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.amount-preview-label{font-size:12px;color:var(--text3)}
+.amount-preview-val{font-size:18px;font-weight:800;color:var(--g1);font-variant-numeric:tabular-nums}
+.amount-preview-val.ded{color:var(--red)}
+.slip-preview-img{width:100%;border-radius:var(--radius-sm);margin-top:12px;display:none;border:1px solid var(--border2)}
+
+/* ── RECEIPT ── */
+.receipt-modal{background:var(--dark3);border:1px solid var(--border2);border-radius:24px;width:100%;max-width:420px;position:relative;animation:modIn .35s cubic-bezier(.34,1.56,.64,1);max-height:92vh;overflow-y:auto;box-shadow:0 32px 80px rgba(0,0,0,0.7)}
+.receipt-modal::-webkit-scrollbar{display:none}
+.receipt-inner{padding:28px}
+.receipt-header{text-align:center;margin-bottom:20px;padding-bottom:20px;border-bottom:1px dashed var(--border2)}
+.receipt-logo{font-size:40px;margin-bottom:8px}
+.receipt-org{font-size:18px;font-weight:800;color:var(--g1)}
+.receipt-sys{font-size:12px;color:var(--text3);letter-spacing:2px}
+.receipt-type-badge{display:inline-block;padding:4px 16px;border-radius:100px;font-size:13px;font-weight:700;margin-top:10px}
+.receipt-type-badge.in{background:rgba(0,255,135,0.12);color:var(--g1);border:1px solid var(--border2)}
+.receipt-type-badge.out{background:var(--red2);color:var(--red);border:1px solid var(--rdb)}
+.receipt-amount{text-align:center;margin:20px 0;padding:20px;background:rgba(0,0,0,0.2);border-radius:var(--radius-sm);border:1px solid var(--border)}
+.receipt-amt-label{font-size:11px;color:var(--text3);letter-spacing:2px;margin-bottom:8px}
+.receipt-amt-val{font-size:42px;font-weight:900;font-variant-numeric:tabular-nums}
+.receipt-amt-val.in{color:var(--g1)}
+.receipt-amt-val.out{color:var(--red)}
+.receipt-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.receipt-row{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13.5px;padding:10px 14px;background:rgba(0,0,0,0.15);border-radius:var(--radius-xs)}
+.receipt-row-label{color:var(--text3);flex-shrink:0}
+.receipt-row-val{color:var(--text);font-weight:600;text-align:right}
+.receipt-id{font-size:10px;color:var(--text4);text-align:center;letter-spacing:1.5px;margin-top:16px;padding-top:16px;border-top:1px dashed var(--border)}
+.btn-receipt-close{width:100%;padding:13px;border-radius:var(--radius-sm);border:1px solid var(--border2);background:transparent;color:var(--text2);font-family:'Kanit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;margin-top:8px}
+.btn-receipt-close:hover{background:var(--card2);color:var(--text)}
+
+/* ── RESET ── */
+.reset-options{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.btn-reset-opt{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 16px;font-family:'Kanit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;color:var(--text2);text-align:left;transition:all .2s;display:flex;align-items:center;gap:10px}
+.btn-reset-opt:hover{border-color:var(--border2);background:var(--card3);color:var(--text)}
+.btn-reset-opt.danger{border-color:var(--rdb);color:var(--red)}
+.btn-reset-opt.danger:hover{background:var(--red2)}
+
+/* ── CONFIRM ── */
+.confirm-box{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;margin-bottom:16px;font-size:13.5px;color:var(--text2);line-height:1.7}
+.confirm-box strong{color:var(--text)}
+.confirm-actions{display:flex;gap:10px}
+.btn-confirm-yes{flex:1;padding:12px;border-radius:var(--radius-xs);background:var(--red2);border:1px solid var(--rdb);color:var(--red);font-family:'Kanit',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-confirm-yes:hover{background:rgba(255,77,109,0.2)}
+.btn-confirm-no{flex:1;padding:12px;border-radius:var(--radius-xs);border:1px solid var(--border);background:transparent;color:var(--text2);font-family:'Kanit',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-confirm-no:hover{background:var(--card3);color:var(--text)}
+
+/* ── RIPPLE ── */
+.ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,0.12);transform:scale(0);animation:ripA .55s linear;pointer-events:none}
+@keyframes ripA{to{transform:scale(4);opacity:0}}
+
+/* ── TOAST ── */
+.toast-area{position:fixed;bottom:20px;right:20px;z-index:700;display:flex;flex-direction:column;gap:8px;align-items:flex-end;pointer-events:none}
+.toast{background:var(--dark3);border:1px solid var(--border2);border-radius:14px;padding:12px 18px;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:9px;animation:tIn .35s cubic-bezier(.34,1.56,.64,1) both;min-width:220px;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,0.6);pointer-events:auto}
+@keyframes tIn{from{opacity:0;transform:translateX(50px) scale(.9)}to{opacity:1;transform:none}}
+.toast.fade-out{animation:tOut .3s ease forwards}
+@keyframes tOut{to{opacity:0;transform:translateX(50px)}}
+
+/* ── MISC ── */
+.section-sub-title{font-size:12px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:10px;font-weight:600}
+.branding{text-align:center;padding:20px 0 4px;font-size:11.5px;color:var(--text4);letter-spacing:2px}
+.branding strong{color:var(--g4)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:540px){
+  .tb-name{display:none}
+  .act-grid{grid-template-columns:1fr}
+  .export-grid{grid-template-columns:1fr}
+  .f-row{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .mem-summary{grid-template-columns:1fr 1fr 1fr}
+  .budget-summary{grid-template-columns:1fr 1fr 1fr}
+  .perperson-grid{grid-template-columns:1fr}
+  .team-color-grid{grid-template-columns:1fr 1fr}
+  .fab-group.admin-mode{display:flex}
+  .act-grid{display:none!important}
+  .modal-body{padding:20px}
+}
+@media(min-width:541px){.fab-group{display:none!important}}
+</style>
+</head>
+<body>
+
+<div id="loadingOverlay">
+  <div class="load-icon">💚</div>
+  <div class="load-text">กองทุนเงินค่าสีเขียว</div>
+  <div class="load-sub">กำลังโหลดข้อมูลจาก Firebase...</div>
+  <div class="load-track"><div class="load-progress"></div></div>
+</div>
+<div id="particles"></div>
+
+<div id="appScreen">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-logo">💚</div>
+      <div>
+        <div class="tb-name">กองทุนค่าสีเขียว</div>
+        <div class="tb-ver">FLIPCYBER v6.0</div>
+      </div>
+    </div>
+    <div class="tb-right">
+      <div class="user-chip">
+        <div class="user-avatar" id="userAvatar">👤</div>
+        <span class="user-name" id="userLabel">สาธารณะ</span>
+        <span class="role-tag" id="rolePill">Viewer</span>
+      </div>
+      <button class="btn-icon login" id="btnAdminLogin" onclick="openAdminLogin()" title="Admin Login">🔐</button>
+      <button class="btn-icon logout" id="btnLogout" onclick="doLogout()" title="ออกจากระบบ" style="display:none">🚪</button>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="nav-wrap">
+    <div class="nav-tabs">
+      <button class="nav-tab active" onclick="showTab('dash',this)">📊 Dashboard</button>
+      <button class="nav-tab" onclick="showTab('history',this)">📋 ประวัติ</button>
+      <button class="nav-tab" onclick="showTab('announce',this)">📣 ประกาศ<span class="nav-notif" id="annNotif" style="display:none">0</span></button>
+      <button class="nav-tab" onclick="showTab('members',this)">👥 สมาชิก</button>
+      <button class="nav-tab" onclick="showTab('budget',this)">💰 งบประมาณ</button>
+      <button class="nav-tab" onclick="showTab('chart',this)">📈 กราฟ</button>
+      <button class="nav-tab" onclick="showTab('export',this)">📤 Export</button>
+      <button class="nav-tab" onclick="showTab('audit',this)">📜 Audit<span class="nav-notif" id="auditNotif" style="display:none">!</span></button>
+    </div>
+  </div>
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div class="tab-content active" id="tab-dash">
+    <div class="inner">
+      <div id="viewerBanner" class="banner warn">⚠️ โหมดดูข้อมูล (Read-only) — Admin กรุณากดปุ่ม 🔐 ที่มุมขวาบน</div>
+
+      <!-- COUNTDOWN -->
+      <div class="countdown-card" id="countdownCard">
+        <div class="cd-hdr">
+          <div>
+            <div class="cd-title">⏳ นับถอยหลัง</div>
+            <div class="cd-event-name" id="cdEventName">—</div>
+          </div>
+          <button class="cd-edit-btn" onclick="openCountdownModal()">ตั้งวัน</button>
+        </div>
+        <div id="cdDisplay" class="cd-no-date">ยังไม่ได้ตั้งวันจัดงาน</div>
+      </div>
+
+      <!-- BALANCE HERO -->
+      <div class="balance-hero">
+        <div class="bh-top">
+          <div class="bh-label">ยอดเงินคงเหลือปัจจุบัน</div>
+          <div class="bh-trend up" id="balTrend">💚 Live</div>
+        </div>
+        <div class="bal-amount" id="balDisp" data-v="0">0.00</div>
+        <div class="bal-unit">บาท</div>
+        <div class="bal-progress-hdr">
+          <span>สัดส่วนคงเหลือจากรายรับ</span>
+          <span id="balPct" style="color:var(--g2)">0%</span>
+        </div>
+        <div class="bal-bar"><div class="bal-bar-fill" id="balBarFill" style="width:0%"></div></div>
+        <div class="bal-footer">
+          <span class="bal-meta">รายการ: <strong id="txnCnt">0</strong></span>
+          <span class="bal-meta">อัปเดต: <strong id="lastUpdate">—</strong></span>
+          <span class="bal-meta" id="adminBy" style="display:none">โดย: <strong id="lastBy">—</strong></span>
+        </div>
+      </div>
+
+      <!-- GOAL -->
+      <div class="goal-card">
+        <div class="goal-hdr">
+          <div>
+            <div class="goal-hdr-title">🎯 เป้าหมายยอดเงิน</div>
+            <div class="goal-hdr-name" id="goalName">—</div>
+          </div>
+          <button class="btn-icon" id="goalEditBtn" onclick="openGoalModal()" style="display:none;color:var(--gold);border-color:var(--goldb);cursor:pointer;z-index:10;position:relative">✏️</button>
+        </div>
+        <div class="goal-numbers">
+          <span class="goal-current" id="goalCurrent" data-v="0">0.00</span>
+          <span class="goal-sep">/</span>
+          <span class="goal-target" id="goalTarget">—</span>
+          <span class="goal-unit">บาท</span>
+        </div>
+        <div class="goal-bar"><div class="goal-fill" id="goalFill" style="width:0%"></div></div>
+        <div class="goal-pct-row">
+          <div class="goal-pct">ความคืบหน้า <strong id="goalPct">0%</strong></div>
+          <div class="goal-remaining" id="goalRemaining"></div>
+        </div>
+      </div>
+
+      <!-- STATS -->
+      <div class="stats-grid">
+        <div class="stat-c in" data-icon="📈"><div class="stat-lbl">รับเข้าทั้งหมด</div><div class="stat-val green" id="sTotalIn" data-v="0">0.00</div><div class="stat-sub" id="sTotalInCnt">0 รายการ</div></div>
+        <div class="stat-c out" data-icon="📉"><div class="stat-lbl">จ่ายออกทั้งหมด</div><div class="stat-val red" id="sTotalOut" data-v="0">0.00</div><div class="stat-sub" id="sTotalOutCnt">0 รายการ</div></div>
+        <div class="stat-c txn" data-icon="🔢"><div class="stat-lbl">รายการทั้งหมด</div><div class="stat-val blue" id="sTxn">0</div><div class="stat-sub">รายการ</div></div>
+        <div class="stat-c today" data-icon="📅"><div class="stat-lbl">วันนี้</div><div class="stat-val gold" id="sToday">0</div><div class="stat-sub">รายการวันนี้</div></div>
+        <div class="stat-c avg" data-icon="➗"><div class="stat-lbl">เฉลี่ยต่อรายการ</div><div class="stat-val purple" id="sAvg" data-v="0">0.00</div><div class="stat-sub">บาท</div></div>
+        <div class="stat-c mem" data-icon="👥"><div class="stat-lbl">สมาชิกชำระแล้ว</div><div class="stat-val green" id="sMemPaid">0</div><div class="stat-sub" id="sMemTotal">จาก 0 คน</div></div>
+      </div>
+
+      <!-- PER-PERSON SUMMARY -->
+      <div class="perperson-card section-card" style="padding:18px 20px">
+        <div style="font-size:14px;font-weight:700;color:var(--g2);margin-bottom:4px">💡 สรุปค่าใช้จ่ายต่อหัว</div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:12px">คำนวณจากจำนวนสมาชิกทั้งหมด</div>
+        <div class="perperson-grid">
+          <div class="pp-item"><span class="pp-label">📊 ต้นทุนต่อหัว</span><span class="pp-val" id="ppCostPerHead">—</span></div>
+          <div class="pp-item"><span class="pp-label">💰 เก็บได้ต่อหัว</span><span class="pp-val" id="ppCollectedPerHead">—</span></div>
+          <div class="pp-item"><span class="pp-label">🎯 เป้าต่อหัว</span><span class="pp-val" id="ppGoalPerHead" style="color:var(--gold)">—</span></div>
+          <div class="pp-item"><span class="pp-label">💸 จ่ายเฉลี่ยต่อหัว</span><span class="pp-val" id="ppSpentPerHead" style="color:var(--red)">—</span></div>
+        </div>
+      </div>
+
+      <!-- COLOR TEAM STATS -->
+      <div class="section-card" style="padding:18px 20px;margin-bottom:14px">
+        <div style="font-size:14px;font-weight:700;color:var(--g2);margin-bottom:12px">🏅 สถิติแยกตามสี/ฝ่าย</div>
+        <div class="team-color-grid" id="teamColorGrid">
+          <div class="empty-state" style="padding:20px"><span class="empty-icon" style="font-size:28px">🎨</span><div class="empty-title" style="font-size:13px">ยังไม่มีข้อมูลสี</div></div>
+        </div>
+      </div>
+
+      <!-- ADMIN ACTIONS -->
+      <div id="adminActionsSection" style="display:none">
+        <div class="section-sub-title">⚡ ดำเนินการ</div>
+        <div class="act-grid" id="adminActions">
+          <button class="btn-act btn-act-add" onclick="openTxnModal('add')"><span>💚</span><span>เพิ่มรายรับ</span></button>
+          <button class="btn-act btn-act-ded" onclick="openTxnModal('ded')"><span>❤️</span><span>หักรายจ่าย</span></button>
+        </div>
+        <button id="resetBtn" onclick="openReset()" style="width:100%;padding:11px;border-radius:var(--radius-sm);border:1px solid var(--rdb);background:var(--red2);color:var(--red);font-family:'Kanit',sans-serif;font-size:14px;cursor:pointer;font-weight:600;transition:all .2s" onmouseenter="this.style.background='rgba(255,77,109,0.2)'" onmouseleave="this.style.background='var(--red2)'">⚠️ รีเซ็ตกองทุน</button>
+      </div>
+
+      <div class="branding">ขับเคลื่อนโดย <strong>FLIPCYBER</strong> — กองทุนเงินค่าสีเขียว 💚</div>
+    </div>
+  </div>
+
+  <!-- ═══ HISTORY ═══ -->
+  <div class="tab-content" id="tab-history">
+    <div class="inner">
+      <div class="search-row">
+        <div class="search-input-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="search-input" type="text" id="searchQ" placeholder="ค้นหาชื่อ, ห้อง, เหตุผล..." oninput="renderHistory()">
+        </div>
+        <select class="filter-sel" id="filterType" onchange="renderHistory()">
+          <option value="all">ทุกประเภท</option>
+          <option value="เพิ่ม">รายรับ ✅</option>
+          <option value="หัก">รายจ่าย 🔴</option>
+        </select>
+        <select class="filter-sel" id="filterCat" onchange="renderHistory()">
+          <option value="all">ทุกหมวด</option>
+          <option value="ค่าสีเขียว">ค่าสีเขียว</option>
+          <option value="ค่าชุดกีฬา">ค่าชุดกีฬา</option>
+          <option value="ค่าอาหาร">ค่าอาหาร</option>
+          <option value="ค่าวัสดุ">ค่าวัสดุ</option>
+          <option value="อื่นๆ">อื่นๆ</option>
+        </select>
+        <select class="filter-sel" id="filterDate" onchange="renderHistory()">
+          <option value="all">ทุกวัน</option>
+          <option value="today">วันนี้</option>
+          <option value="week">7 วันล่าสุด</option>
+        </select>
+      </div>
+      <div class="section-card">
+        <div class="section-hdr">
+          <span class="section-hdr-title">📋 ประวัติการทำรายการ</span>
+          <span class="badge" id="histBadge">0 รายการ</span>
+        </div>
+        <div class="history-wrap" id="historyList">
+          <div class="empty-state"><span class="empty-icon">📭</span><div class="empty-title">ยังไม่มีรายการ</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ANNOUNCEMENTS ═══ -->
+  <div class="tab-content" id="tab-announce">
+    <div class="inner">
+      <button class="ann-add-btn" onclick="openAnnModal()">+ ➕ เพิ่มประกาศใหม่</button>
+      <div class="section-card" id="annCard">
+        <div class="section-hdr">
+          <span class="section-hdr-title">📣 ประกาศจากกองทุน</span>
+          <span class="badge" id="annBadge">0 ประกาศ</span>
+        </div>
+        <div id="annList">
+          <div class="empty-state"><span class="empty-icon">📢</span><div class="empty-title">ยังไม่มีประกาศ</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MEMBERS ═══ -->
+  <div class="tab-content" id="tab-members">
+    <div class="inner">
+      <div class="mem-summary">
+        <div class="mem-sum-card"><div class="mem-sum-num" id="memTotalNum" style="color:var(--text)">0</div><div class="mem-sum-lbl">สมาชิกทั้งหมด</div></div>
+        <div class="mem-sum-card"><div class="mem-sum-num" id="memPaidNum" style="color:var(--g1)">0</div><div class="mem-sum-lbl">ชำระแล้ว ✅</div></div>
+        <div class="mem-sum-card"><div class="mem-sum-num" id="memUnpaidNum" style="color:var(--red)">0</div><div class="mem-sum-lbl">ยังไม่ชำระ ⏳</div></div>
+      </div>
+
+      <!-- Ring -->
+      <div class="section-card" style="padding:20px;margin-bottom:14px">
+        <div class="section-hdr" style="margin:-20px -20px 16px;padding:14px 20px">
+          <span class="section-hdr-title">🟢 ความคืบหน้าการชำระ</span>
+          <span class="badge gold" id="memPctBadge">0%</span>
+        </div>
+        <div class="progress-ring-wrap">
+          <svg width="160" height="160" class="progress-ring-svg">
+            <defs><linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#007a3d"/><stop offset="100%" style="stop-color:#00ff87"/></linearGradient></defs>
+            <circle class="progress-ring-bg" cx="80" cy="80" r="68"/>
+            <circle class="progress-ring-fill" id="ringFill" cx="80" cy="80" r="68" stroke-dasharray="427.26" stroke-dashoffset="427.26"/>
+            <text x="80" y="74" class="ring-label" style="font-size:28px;font-weight:900;fill:#00ff87" id="ringPctText">0%</text>
+            <text x="80" y="96" class="ring-label" style="font-size:11px;fill:#4e8566">ชำระแล้ว</text>
+          </svg>
+        </div>
+        <div style="display:flex;justify-content:center;gap:20px;font-size:12px;color:var(--text3)">
+          <span>💰 รวมที่เก็บได้: <strong id="memTotalCollected" style="color:var(--g1)">฿0.00</strong></span>
+          <span>🎯 เป้า/คน: <strong id="memTargetPerPerson" style="color:var(--gold)">—</strong></span>
+        </div>
+      </div>
+
+      <!-- REMINDER -->
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <button class="btn-reminder" onclick="copyUnpaidReminder()">📣 คัดลอกรายชื่อคนยังไม่จ่าย</button>
+      </div>
+
+      <div class="mem-controls">
+        <button class="mem-add-btn" onclick="openAddMemberModal()">+ เพิ่มสมาชิก</button>
+        <button class="mem-import-btn" onclick="openImportMembersModal()">📋 นำเข้าหลายคน</button>
+        <select class="filter-sel" id="memFilterStatus" onchange="renderMembers()" style="margin-left:auto">
+          <option value="all">ทุกสถานะ</option>
+          <option value="paid">ชำระแล้ว ✅</option>
+          <option value="unpaid">ยังไม่ชำระ ⏳</option>
+        </select>
+        <select class="filter-sel" id="memFilterColor" onchange="renderMembers()">
+          <option value="all">ทุกสี</option>
+          <option value="red">🔴 แดง</option>
+          <option value="blue">🔵 น้ำเงิน</option>
+          <option value="yellow">🟡 เหลือง</option>
+          <option value="green">🟢 เขียว</option>
+          <option value="white">⚪ ขาว</option>
+          <option value="orange">🟠 ส้ม</option>
+          <option value="purple">🟣 ม่วง</option>
+        </select>
+        <div class="search-input-wrap" style="min-width:130px;max-width:200px">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="search-input" type="text" id="memSearch" placeholder="ค้นหาชื่อ..." oninput="renderMembers()">
+        </div>
+      </div>
+      <div class="section-card">
+        <div class="section-hdr">
+          <span class="section-hdr-title">👥 รายชื่อสมาชิก</span>
+          <span class="badge" id="memBadge">0 คน</span>
+        </div>
+        <div class="mem-list" id="memberList">
+          <div class="empty-state"><span class="empty-icon">👤</span><div class="empty-title">ยังไม่มีรายชื่อ</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ BUDGET ═══ -->
+  <div class="tab-content" id="tab-budget">
+    <div class="inner">
+      <button class="budget-add-btn" onclick="openBudgetModal()">+ ➕ ตั้งงบประมาณหมวดใหม่</button>
+      <div class="budget-summary">
+        <div class="bs-card"><div class="bs-num green" id="bsTotalBudget" style="color:var(--g1)">฿0</div><div class="bs-lbl">งบรวมทั้งหมด</div></div>
+        <div class="bs-card"><div class="bs-num red" id="bsTotalSpent" style="color:var(--red)">฿0</div><div class="bs-lbl">ใช้ไปแล้ว</div></div>
+        <div class="bs-card"><div class="bs-num gold" id="bsTotalRemain" style="color:var(--gold)">฿0</div><div class="bs-lbl">คงเหลืองบ</div></div>
+      </div>
+      <div class="section-card">
+        <div class="section-hdr">
+          <span class="section-hdr-title">💰 งบประมาณแยกหมวด</span>
+          <span class="badge" id="budgetBadge">0 หมวด</span>
+        </div>
+        <div id="budgetList">
+          <div class="empty-state"><span class="empty-icon">💼</span><div class="empty-title">ยังไม่ได้ตั้งงบประมาณ</div><div class="empty-sub">Admin สามารถตั้งงบแต่ละหมวดได้</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ CHART ═══ -->
+  <div class="tab-content" id="tab-chart">
+    <div class="inner">
+      <div class="section-card" style="padding:20px;margin-bottom:14px">
+        <div class="section-hdr" style="margin:-20px -20px 18px;padding:14px 20px"><span class="section-hdr-title">📊 รายรับ-รายจ่ายรายวัน (7 วัน)</span></div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:rgba(0,255,135,0.8)"></span>รายรับ</span>
+          <span><span class="legend-dot" style="background:rgba(255,77,109,0.7)"></span>รายจ่าย</span>
+        </div>
+        <div style="position:relative;width:100%;height:260px"><canvas id="chartDaily"></canvas></div>
+      </div>
+      <div class="section-card" style="padding:20px;margin-bottom:14px">
+        <div class="section-hdr" style="margin:-20px -20px 18px;padding:14px 20px"><span class="section-hdr-title">📈 ยอดเงินสะสม (Balance Over Time)</span></div>
+        <div style="position:relative;width:100%;height:220px"><canvas id="chartLine"></canvas></div>
+      </div>
+      <div class="section-card" style="padding:20px;margin-bottom:14px">
+        <div class="section-hdr" style="margin:-20px -20px 18px;padding:14px 20px"><span class="section-hdr-title">🍩 สัดส่วนรับ vs จ่าย</span></div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:rgba(0,255,135,0.8)"></span>รับเข้า</span>
+          <span><span class="legend-dot" style="background:rgba(255,77,109,0.7)"></span>จ่ายออก</span>
+          <span><span class="legend-dot" style="background:rgba(0,180,255,0.7)"></span>คงเหลือ</span>
+        </div>
+        <div style="position:relative;width:100%;height:220px"><canvas id="chartDonut"></canvas></div>
+      </div>
+      <div class="section-card" style="padding:20px">
+        <div class="section-hdr" style="margin:-20px -20px 18px;padding:14px 20px"><span class="section-hdr-title">🏷️ สัดส่วนตามหมวดหมู่</span></div>
+        <div style="position:relative;width:100%;height:220px"><canvas id="chartCat"></canvas></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ EXPORT ═══ -->
+  <div class="tab-content" id="tab-export">
+    <div class="inner">
+      <div class="export-grid" style="margin-bottom:16px">
+        <div class="export-card" onclick="exportCSV()"><span class="export-icon">📄</span><div class="export-title">Export CSV</div><div class="export-desc">ประวัติทั้งหมดสำหรับ Excel</div></div>
+        <div class="export-card" onclick="exportJSON()"><span class="export-icon">🗂️</span><div class="export-title">Export JSON</div><div class="export-desc">ข้อมูลดิบในรูปแบบ JSON</div></div>
+        <div class="export-card" onclick="exportTxt()"><span class="export-icon">📝</span><div class="export-title">รายงาน TXT</div><div class="export-desc">สรุปยอดพร้อมพิมพ์</div></div>
+        <div class="export-card" onclick="copyReport()"><span class="export-icon">📋</span><div class="export-title">คัดลอกรายงาน</div><div class="export-desc">แปะในไลน์, Discord</div></div>
+        <div class="export-card" onclick="exportMembersCSV()"><span class="export-icon">👥</span><div class="export-title">Export สมาชิก</div><div class="export-desc">รายชื่อ+สี+สถานะการชำระ</div></div>
+        <div class="export-card" onclick="exportBudgetCSV()"><span class="export-icon">💰</span><div class="export-title">Export งบประมาณ</div><div class="export-desc">รายการงบแต่ละหมวด</div></div>
+      </div>
+      <div class="section-card">
+        <div class="section-hdr">
+          <span class="section-hdr-title">👁️ ตัวอย่างรายงาน</span>
+          <button onclick="renderReportPreview()" style="background:var(--card2);border:1px solid var(--border);color:var(--text2);font-family:'Kanit',sans-serif;font-size:12px;padding:5px 12px;border-radius:8px;cursor:pointer;transition:all .2s">🔄 รีเฟรช</button>
+        </div>
+        <div style="padding:16px 20px"><div class="report-box" id="reportPreview">กำลังสร้างรายงาน...</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ AUDIT LOG ═══ -->
+  <div class="tab-content" id="tab-audit">
+    <div class="inner">
+      <div class="search-row" style="margin-bottom:14px">
+        <select class="filter-sel" id="auditFilter" onchange="renderAuditLog()" style="flex:1">
+          <option value="all">ทุกประเภท</option>
+          <option value="add">เพิ่มรายการ</option>
+          <option value="del">ลบรายการ</option>
+          <option value="reset">รีเซ็ต</option>
+          <option value="login">เข้า/ออกระบบ</option>
+          <option value="edit">แก้ไขข้อมูล</option>
+        </select>
+        <button onclick="DB.auditLog=[];saveDB();toast('ล้าง Audit Log แล้ว','🗑️')" id="auditClearBtn" style="display:none;padding:10px 16px;border-radius:var(--radius-xs);border:1px solid var(--rdb);background:var(--red2);color:var(--red);font-family:'Kanit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s">🗑️ ล้าง Log</button>
+      </div>
+      <div class="section-card">
+        <div class="section-hdr">
+          <span class="section-hdr-title">📜 Audit Log — บันทึกการกระทำของ Admin</span>
+          <span class="badge" id="auditBadge">0 รายการ</span>
+        </div>
+        <div class="history-wrap" id="auditList">
+          <div class="empty-state"><span class="empty-icon">📜</span><div class="empty-title">ยังไม่มีบันทึก</div><div class="empty-sub">ทุกการกระทำของ Admin จะถูกบันทึกที่นี่</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /appScreen -->
+
+<!-- FAB -->
+<div class="fab-group" id="fabGroup">
+  <button class="fab fab-main" onclick="toggleFab()" id="fabMain">⚡</button>
+  <button class="fab fab-add" onclick="openTxnModal('add');toggleFab(false)">💚</button>
+  <button class="fab fab-ded" onclick="openTxnModal('ded');toggleFab(false)">❤️</button>
+</div>
+
+<!-- ═══ MODALS ═══ -->
+
+<!-- ADMIN LOGIN -->
+<div class="ov" id="adminLoginOv">
+  <div class="modal"><button class="modal-close" onclick="closeAdminLogin()">✕</button>
+    <div class="modal-body">
+      <div class="modal-title" style="color:var(--g1)">🔐 เข้าสู่ระบบ Admin</div>
+      <div class="modal-sub">กรอก username และ password เพื่อจัดการกองทุน</div>
+      <div class="f-grp"><label>Username</label><input type="text" id="alUser" placeholder="กรอก username" autocomplete="username"></div>
+      <div class="f-grp"><label>Password</label><input type="password" id="alPass" placeholder="กรอก password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAdminLogin()"></div>
+      <div class="f-err" id="alErr"></div>
+      <button class="btn-submit add" style="margin-top:10px" onclick="doAdminLogin()">🔓 เข้าสู่ระบบ</button>
+    </div>
+  </div>
+</div>
+
+<!-- TRANSACTION -->
+<div class="ov" id="txnOv">
+  <div class="modal"><button class="modal-close" onclick="closeTxnModal()">✕</button>
+    <div class="modal-body">
+      <div class="modal-title" id="txnTitle">เพิ่มรายรับ</div>
+      <div class="modal-sub" id="txnSub">กรอกข้อมูลให้ครบถ้วน</div>
+      <div class="amount-preview"><span class="amount-preview-label">💰 จำนวนเงิน</span><span class="amount-preview-val" id="amtPreviewVal">฿ 0.00</span></div>
+      <div class="f-grp"><label>จำนวนเงิน (บาท)</label><div class="f-amt-wrap"><span class="f-pfx">฿</span><input type="number" id="fAmt" placeholder="0.00" min="0.01" step="0.01" oninput="updateAmtPreview()"></div></div>
+      <div class="f-row">
+        <div class="f-grp"><label>ชื่อผู้ดำเนินการ</label><input type="text" id="fName" placeholder="ชื่อ-นามสกุล"></div>
+        <div class="f-grp"><label>ห้อง</label><input type="text" id="fRoom" placeholder="เช่น 6/5"></div>
+      </div>
+      <div class="f-grp"><label>หมวดหมู่</label>
+        <select id="fCat">
+          <option value="ค่าสีเขียว">💚 ค่าสีเขียว</option>
+          <option value="ค่าชุดกีฬา">👕 ค่าชุดกีฬา</option>
+          <option value="ค่าอาหาร">🍱 ค่าอาหาร</option>
+          <option value="ค่าวัสดุ">🛒 ค่าวัสดุ/อุปกรณ์</option>
+          <option value="อื่นๆ">📌 อื่นๆ</option>
+        </select>
+      </div>
+      <div class="f-grp"><label>เหตุผล / หมายเหตุ</label><textarea id="fReason" placeholder="อธิบายเหตุผล..."></textarea></div>
+      <div class="f-grp"><label>ลิงก์สลิป (ถ้ามี)</label><input type="url" id="fSlip" placeholder="https://..." oninput="previewSlip()"></div>
+      <img id="slipPreviewImg" class="slip-preview-img" alt="สลิป">
+      <button class="btn-submit add" id="txnSubmitBtn" onclick="submitTxn()">✅ บันทึกรายรับ</button>
+    </div>
+  </div>
+</div>
+
+<!-- RECEIPT -->
+<div class="ov" id="receiptOv">
+  <div class="receipt-modal"><button class="modal-close" onclick="closeReceipt()">✕</button>
+    <div class="receipt-inner">
+      <div class="receipt-header">
+        <div class="receipt-logo">🧾</div>
+        <div class="receipt-org">กองทุนเงินค่าสีเขียว</div>
+        <div class="receipt-sys">FLIPCYBER FUND SYSTEM</div>
+        <div class="receipt-type-badge" id="receiptTypeBadge">—</div>
+      </div>
+      <div class="receipt-amount">
+        <div class="receipt-amt-label">จำนวนเงิน</div>
+        <div class="receipt-amt-val" id="receiptAmt">0.00</div>
+        <div style="font-size:13px;color:var(--text3);margin-top:4px">บาท</div>
+      </div>
+      <div class="receipt-rows" id="receiptRows"></div>
+      <div style="padding:12px;background:rgba(0,255,135,0.06);border:1px solid var(--border2);border-radius:var(--radius-xs);text-align:center">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:4px">ยอดคงเหลือหลังทำรายการ</div>
+        <div style="font-size:22px;font-weight:800;color:var(--g1)" id="receiptBalance">฿0.00</div>
+      </div>
+      <div class="receipt-id" id="receiptId">TX-000000</div>
+      <div>
+        <button class="btn-receipt-close" onclick="closeReceipt()">✅ รับทราบ</button>
+        <button class="btn-receipt-close" onclick="copyReceiptText()" style="border-color:var(--border2);color:var(--g2)">📋 คัดลอกใบเสร็จ</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ANNOUNCEMENT -->
+<div class="ov" id="annOv">
+  <div class="modal"><button class="modal-close" onclick="closeAnnModal()">✕</button>
+    <div class="modal-body">
+      <div class="modal-title" style="color:var(--blue)">📣 เพิ่มประกาศใหม่</div>
+      <div class="modal-sub">ประกาศจะแสดงให้ทุกคนเห็น</div>
+      <div class="f-grp"><label>ประเภท</label>
+        <select id="fAnnType"><option value="normal">📢 ทั่วไป</option><option value="important">🚨 สำคัญ</option><option value="info">ℹ️ แจ้งข้อมูล</option></select>
+      </div>
+      <div class="f-grp"><label>หัวข้อ</label><input type="text" id="fAnnTitle" placeholder="หัวข้อประกาศ..."></div>
+      <div class="f-grp"><label>เนื้อหา</label><textarea id="fAnnBody" placeholder="รายละเอียด..." style="height:110px"></textarea></div>
+      <div class="f-grp" style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <input type="checkbox" id="fAnnPin" style="width:18px;height:18px;accent-color:var(--gold)">
+        <label style="font-size:14px;color:var(--text2);text-transform:none;letter-spacing:0;margin:0;cursor:pointer" for="fAnnPin">📌 ปักหมุด</label>
+      </div>
+      <button class="btn-submit blue" onclick="submitAnn()">📣 โพสต์ประกาศ</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MEMBER -->
+<div class="ov" id="addMemberOv">
+  <div class="modal"><button class="modal-close" onclick="closeAddMemberModal()">✕</button>
+    <div class="modal-body">
+      <div class="modal-title" style="color:var(--g1)">👤 เพิ่มสมาชิก</div>
+      <div class="modal-sub">เพิ่มรายชื่อพร้อมสีและสถานะ</div>
+      <div class="f-row">
+        <div class="f-grp"><label>ชื่อ-นามสกุล</label><input type="text" id="fMemName" placeholder="ชื่อ-นามสกุล"></div>
+        <div class="f-grp"><label>ห้อง</label><input type="text" id="fMemRoom" placeholder="เช่น 6/5"></div>
+      </div>
+      <div class="f-grp"><label>สี/ฝ่าย</label>
+        <select id="fMemColor">
+          <option value="">— ไม่ระบุ —</option>
+          <option value="red">🔴 แดง</option>
+          <option value="blue">🔵 น้ำเงิน</option>
+          <option value="yellow">🟡 เหลือง</option>
+          <option value="green">🟢 เขียว</option>
+          <option value="white">⚪ ขาว</option>
+          <option value="orange">🟠 ส้ม</option>
+          <option value="purple">🟣 ม่วง</option>
+        </select>
+      </div>
+      <div class="f-grp"><label>สถานะ</label>
+        <select id="fMemStatus" onchange="document.getElementById('fMemAmtGrp').style.display=this.value==='paid'?'block':'none'">
+          <option value="unpaid">⏳ ยังไม่ชำระ</option>
+          <option value="paid">✅ ชำระแล้ว</option>
+        </select>
+      </div>
+      <div class="f-grp" id="fMemAmtGrp" style="display:none"><label>จำนวนที่ชำระ (บาท)</label><div class="f-amt-wrap"><span class="f-pfx">฿</span><input type="number" id="fMemAmt" placeholder="0.00" min="0"></div></div>
+      <button class="btn-submit add" onclick="submitAddMember()">✅ เพิ่มสมาชิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT MEMBERS -->
+<div class="ov" id="importMembersOv">
+  <div class="modal"><button class="modal-close" onclick="closeImportMembersModal()">✕</button>
+    <div class="modal-body">
+      <div class="modal-title" style="color:var(--g2)">📋 นำเข้าชื่อสมาชิก</div>
+      <div class="modal-sub">รูปแบบ: ชื่อ,ห้อง,สี (สีใช้ red/blue/yellow/green/white/orange/purple)</div>
+      <div class="f-grp"><label>รายชื่อ (1 คน/บรรทัด)</label>
+        <textarea id="fImportText" style="height:160px;font-family:monospace;font-size:13px" placeholder="สมชาย ใจดี,6/5,red&#10;สมหญิง รักเรียน,6/3,blue&#10;สมศรี มีทอง,,green"></textarea>
+      </div>
+      <div class="f-row">
+        <div class="f-grp"><label>ห้องเริ่มต้น</label><input type="text" id="fImportRoom" placeholder="เช่น 6/5"></div>
+        <div class="f-grp"><label>สีเริ่มต้น</label>
+          <select id="fImportColor">
+            <option value="">— ไม่ระบุ —</option>
+            <option value="red">🔴 แดง</option>
+            <option value="blue">🔵 น้ำเงิน</option>
+            <option value="yellow">🟡 เหลือง</option>
+            <option value="green">🟢 เขียว</option>
+            <option value="white">⚪ ขาว</option>
+            <option value="orange">🟠 ส้ม</option>
+            <option value="purple">🟣 ม่วง</option>
+          </select>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:12px" id="importPreview"></div>
+      <button class="btn-submit add" onclick="submitImportMembers()">📋 นำเข้า</button>
+    </div>
+  </div>
+</div>
+
+<!-- BUDGET MODAL -->
+<div class="ov" id="budgetOv">
+  <div class="modal"><button class="modal-close" onclick="closeBudgetModal()">✕</button>
+    <div class="modal-body">
+      <div class="modal-title" style="color:var(--g2)">💰 ตั้งงบประมาณ</div>
+      <div class="modal-sub">กำหนดงบสำหรับแต่ละหมวดหมู่</div>
+      <div class="f-grp"><label>หมวดหมู่</label>
+        <select id="fBudgetCat">
+          <option value="ค่าสีเขียว">💚 ค่าสีเขียว</option>
+          <option value="ค่าชุดกีฬา">👕 ค่าชุดกีฬา</option>
+          <option value="ค่าอาหาร">🍱 ค่าอาหาร</option>
+          <option value="ค่าวัสดุ">🛒 ค่าวัสดุ/อุปกรณ์</option>
+          <option value="อื่นๆ">📌 อื่นๆ</option>
+        </select>
+      </div>
+      <div class="f-grp"><label>ชื่องบ (ไม่บังคับ)</label><input type="text" id="fBudgetName" placeholder="เช่น งบค่าชุดกีฬา ม.6"></div>
+      <div class="f-grp"><label>งบประมาณ (บาท)</label><div class="f-amt-wrap"><span class="f-pfx">฿</span><input type="number" id="fBudgetAmt" placeholder="เช่น 5000" min="1"></div></div>
+      <button class="btn-submit add" onclick="submitBudget()">💰 บันทึกงบประมาณ</button>
+    </div>
+  </div>
+</div>
+
+<!-- COUNTDOWN MODAL -->
+<div class="ov" id="countdownOv">
+  <div class="modal"><button class="modal-close" onclick="closeCountdownModal()">✕</button>
+    <div class="modal-body">
+      <div class="modal-title" style="color:var(--blue)">⏳ ตั้งวันจัดกีฬาสี</div>
+      <div class="modal-sub">ระบบจะนับถอยหลังไปยังวันที่กำหนด</div>
+      <div class="f-grp"><label>ชื่องาน</label><input type="text" id="fCdEventName" placeholder="เช่น กีฬาสีประจำปี 2568"></div>
+      <div class="f-grp"><label>วันที่จัดงาน</label><input type="datetime-local" id="fCdDate"></div>
+      <button class="btn-submit blue" onclick="saveCountdown()">⏳ บันทึกวันนับถอยหลัง</button>
+      <button class="btn-submit" style="background:var(--red2);border:1px solid var(--rdb);color:var(--red);box-shadow:none;margin-top:8px" onclick="clearCountdown()">🗑️ ลบวันนับถอยหลัง</button>
+    </div>
+  </div>
+</div>
+
+<!-- GOAL -->
+<div class="ov" id="goalOv">
+  <div class="modal"><button class="modal-close" onclick="closeGoalModal()">✕</button>
+    <div class="modal-body">
+      <div class="modal-title" style="color:var(--gold)">🎯 ตั้งเป้าหมาย</div>
+      <div class="modal-sub">กำหนดยอดเงินที่ต้องการสะสม</div>
+      <div class="f-grp"><label>ชื่อเป้าหมาย</label><input type="text" id="fGoalName" placeholder="เช่น ค่ากีฬาสี รอบ 2"></div>
+      <div class="f-grp"><label>ยอดเป้าหมาย (บาท)</label><div class="f-amt-wrap"><span class="f-pfx">฿</span><input type="number" id="fGoal" placeholder="เช่น 10000" min="1"></div></div>
+      <div class="f-grp"><label>ยอดเป้าหมายต่อคน (บาท)</label><div class="f-amt-wrap"><span class="f-pfx">฿</span><input type="number" id="fGoalPerPerson" placeholder="เช่น 100" min="0"></div></div>
+      <button class="btn-submit gold" onclick="saveGoal()">🎯 บันทึกเป้าหมาย</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESET -->
+<div class="ov" id="resetOv">
+  <div class="modal"><button class="modal-close" onclick="closeReset()">✕</button>
+    <div class="modal-body">
+      <div class="modal-title" style="color:var(--red)">⚠️ รีเซ็ตกองทุน</div>
+      <div class="modal-sub">เลือกประเภทการรีเซ็ต — <span style="color:var(--red)">ไม่สามารถย้อนกลับได้</span></div>
+      <div class="reset-options">
+        <button class="btn-reset-opt" onclick="confirmReset('balance')">🔄 รีเซ็ตยอดเงิน <span style="opacity:.5;font-size:12px;margin-left:auto">(เก็บประวัติ)</span></button>
+        <button class="btn-reset-opt danger" onclick="confirmReset('all')">🗑️ รีเซ็ตทุกอย่าง <span style="opacity:.5;font-size:12px;margin-left:auto">(ลบประวัติด้วย)</span></button>
+        <button class="btn-reset-opt danger" onclick="confirmReset('members')">👥 ล้างรายชื่อสมาชิก</button>
+        <button class="btn-reset-opt danger" onclick="confirmReset('budgets')">💰 ล้างงบประมาณ</button>
+        <button class="btn-reset-opt" onclick="closeReset()">↩️ ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM -->
+<div class="ov" id="confirmOv">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-body">
+      <div class="modal-title" style="color:var(--red)">⚠️ ยืนยันการดำเนินการ</div>
+      <div class="modal-sub">กรุณาตรวจสอบก่อนยืนยัน</div>
+      <div class="confirm-box" id="confirmMsg">—</div>
+      <div class="confirm-actions">
+        <button class="btn-confirm-yes" id="confirmYes">ยืนยัน</button>
+        <button class="btn-confirm-no" onclick="closeConfirm()">ยกเลิก</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast-area" id="toastArea"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+// ══════════════════════════════════════════
+//  FIREBASE
+// ══════════════════════════════════════════
+const firebaseConfig = {
+  apiKey:"AIzaSyA5XsBSDBZo_2tel9j5OWeTABzo7jGePEg",
+  authDomain:"green-43fa6.firebaseapp.com",
+  databaseURL:"https://green-43fa6-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"green-43fa6",
+  storageBucket:"green-43fa6.firebasestorage.app",
+  messagingSenderId:"88487074174",
+  appId:"1:88487074174:web:221c489158112d9a8bbb2f"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const fundRef = db.ref('fundData');
+
+// ══════════════════════════════════════════
+//  CONSTANTS
+// ══════════════════════════════════════════
+const ADMIN_USER = 'admin', ADMIN_PASS = '1234';
+const COLORS = {
+  red:   {label:'แดง',   emoji:'🔴', hex:'#ff6060'},
+  blue:  {label:'น้ำเงิน',emoji:'🔵', hex:'#5090ff'},
+  yellow:{label:'เหลือง',emoji:'🟡', hex:'#ffd700'},
+  green: {label:'เขียว', emoji:'🟢', hex:'#00ff87'},
+  white: {label:'ขาว',   emoji:'⚪', hex:'#cccccc'},
+  orange:{label:'ส้ม',   emoji:'🟠', hex:'#ff9800'},
+  purple:{label:'ม่วง',  emoji:'🟣', hex:'#c084fc'}
+};
+
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+let session = null;
+let DB = {
+  balance:0, total_in:0, total_out:0,
+  history:[], goal:null, goalName:'', goalPerPerson:0,
+  announcements:[], members:[],
+  budgets:[],
+  eventDate:null, eventName:'',
+  auditLog:[]
+};
+let txnMode='add', charts={}, fabOpen=false, lastReceiptData=null;
+let cdInterval=null;
+
+// ══════════════════════════════════════════
+//  FIREBASE LISTENER
+// ══════════════════════════════════════════
+fundRef.on('value', snap => {
+  const d = snap.val();
+  if (d) {
+    DB = {
+      balance:       d.balance       ?? 0,
+      total_in:      d.total_in      ?? 0,
+      total_out:     d.total_out     ?? 0,
+      history:       Array.isArray(d.history)       ? d.history       : [],
+      goal:          d.goal          ?? null,
+      goalName:      d.goalName      ?? '',
+      goalPerPerson: d.goalPerPerson ?? 0,
+      announcements: Array.isArray(d.announcements) ? d.announcements : [],
+      members:       Array.isArray(d.members)       ? d.members       : [],
+      budgets:       Array.isArray(d.budgets)       ? d.budgets       : [],
+      eventDate:     d.eventDate     ?? null,
+      eventName:     d.eventName     ?? '',
+      auditLog:      Array.isArray(d.auditLog)      ? d.auditLog      : []
+    };
+  }
+  renderAll();
+  initCountdownDisplay();
+  hideLoading();
+});
+function saveDB() { fundRef.set(DB); }
+
+// ══════════════════════════════════════════
+//  AUDIT LOG
+// ══════════════════════════════════════════
+function logAction(type, action, detail) {
+  if (!session) return;
+  DB.auditLog.unshift({
+    id: uid(), type, action, detail,
+    by: session.username,
+    time: nowTimeStr(),
+    dateISO: new Date().toISOString()
+  });
+  // Keep last 500
+  if (DB.auditLog.length > 500) DB.auditLog = DB.auditLog.slice(0,500);
+}
+
+function renderAuditLog() {
+  const ft = document.getElementById('auditFilter')?.value || 'all';
+  const items = DB.auditLog.filter(a => ft==='all' || a.type===ft);
+  const list = document.getElementById('auditList');
+  const badge = document.getElementById('auditBadge');
+  if (badge) badge.textContent = DB.auditLog.length + ' รายการ';
+  const iconMap = {add:'✅',del:'🗑️',reset:'🔁',login:'🔐',edit:'✏️'};
+  const clsMap  = {add:'add',del:'del',reset:'reset',login:'login',edit:'edit'};
+  if (!items.length) {
+    list.innerHTML='<div class="empty-state"><span class="empty-icon">📜</span><div class="empty-title">ไม่พบบันทึก</div></div>';
+    return;
+  }
+  list.innerHTML = items.map((a,i) => `
+    <div class="audit-item" style="animation-delay:${Math.min(i*.03,.4)}s">
+      <div class="audit-dot ${clsMap[a.type]||'login'}">${iconMap[a.type]||'📌'}</div>
+      <div class="audit-info">
+        <div class="audit-action">${escHtml(a.action)}</div>
+        <div class="audit-detail">${escHtml(a.detail||'')}</div>
+        <div class="audit-by">👑 ${escHtml(a.by)}</div>
+      </div>
+      <div class="audit-time">${a.time||''}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+//  COUNTDOWN
+// ══════════════════════════════════════════
+function openCountdownModal() {
+  document.getElementById('fCdEventName').value = DB.eventName||'';
+  document.getElementById('fCdDate').value = DB.eventDate ? DB.eventDate.slice(0,16) : '';
+  document.getElementById('countdownOv').classList.add('show');
+}
+function closeCountdownModal() { document.getElementById('countdownOv').classList.remove('show'); }
+
+function saveCountdown() {
+  const name = document.getElementById('fCdEventName').value.trim();
+  const date = document.getElementById('fCdDate').value;
+  if (!date) { toast('กรุณาเลือกวันที่','⚠️'); return; }
+  DB.eventDate = new Date(date).toISOString();
+  DB.eventName = name || 'กีฬาสี';
+  logAction('edit','ตั้งวัน Countdown',`${DB.eventName} — ${nowTimeStr()}`);
+  saveDB(); closeCountdownModal();
+  initCountdownDisplay();
+  toast('บันทึกวัน Countdown แล้ว','⏳');
+}
+
+function clearCountdown() {
+  DB.eventDate=null; DB.eventName='';
+  logAction('edit','ลบ Countdown','—');
+  saveDB(); closeCountdownModal();
+  initCountdownDisplay();
+  toast('ลบ Countdown แล้ว','🗑️');
+}
+
+function initCountdownDisplay() {
+  if (cdInterval) clearInterval(cdInterval);
+  renderCountdown();
+  if (DB.eventDate) cdInterval = setInterval(renderCountdown, 1000);
+}
+
+function renderCountdown() {
+  const cdEl = document.getElementById('cdDisplay');
+  const nameEl = document.getElementById('cdEventName');
+  if (!DB.eventDate) {
+    if(nameEl) nameEl.textContent='—';
+    if(cdEl) cdEl.innerHTML='<div class="cd-no-date">ยังไม่ได้ตั้งวันจัดงาน — Admin กด "ตั้งวัน"</div>';
+    return;
+  }
+  if(nameEl) nameEl.textContent = DB.eventName || 'กีฬาสี';
+  const diff = new Date(DB.eventDate) - new Date();
+  if (diff <= 0) {
+    if(cdEl) cdEl.innerHTML = '<div class="cd-done">🎉 ถึงวันจัดงานแล้ว! ขอให้โชคดี!</div>';
+    clearInterval(cdInterval);
+    return;
+  }
+  const d = Math.floor(diff/86400000);
+  const h = Math.floor((diff%86400000)/3600000);
+  const m = Math.floor((diff%3600000)/60000);
+  const s = Math.floor((diff%60000)/1000);
+  if(cdEl) cdEl.innerHTML=`<div class="cd-boxes">
+    <div class="cd-box"><div class="cd-num">${pad(d)}</div><div class="cd-lbl">วัน</div></div>
+    <div class="cd-box"><div class="cd-num">${pad(h)}</div><div class="cd-lbl">ชั่วโมง</div></div>
+    <div class="cd-box"><div class="cd-num">${pad(m)}</div><div class="cd-lbl">นาที</div></div>
+    <div class="cd-box"><div class="cd-num">${pad(s)}</div><div class="cd-lbl">วินาที</div></div>
+  </div>`;
+}
+const pad = n => String(n).padStart(2,'0');
+
+// ══════════════════════════════════════════
+//  BUDGET SYSTEM
+// ══════════════════════════════════════════
+function openBudgetModal() {
+  document.getElementById('fBudgetName').value='';
+  document.getElementById('fBudgetAmt').value='';
+  document.getElementById('budgetOv').classList.add('show');
+}
+function closeBudgetModal() { document.getElementById('budgetOv').classList.remove('show'); }
+
+function submitBudget() {
+  if (session?.role!=='admin') { toast('เฉพาะ Admin','🔒'); return; }
+  const cat  = document.getElementById('fBudgetCat').value;
+  const name = document.getElementById('fBudgetName').value.trim();
+  const amt  = parseFloat(document.getElementById('fBudgetAmt').value);
+  if (!amt || amt<=0) { toast('กรุณากรอกงบประมาณ','⚠️'); return; }
+  const existing = DB.budgets.findIndex(b=>b.category===cat);
+  if (existing>=0) DB.budgets[existing] = {...DB.budgets[existing], name:name||cat, amount:amt};
+  else DB.budgets.push({id:uid(), category:cat, name:name||cat, amount:amt});
+  logAction('edit','ตั้งงบประมาณ',`${cat}: ฿${fmt(amt)}`);
+  saveDB(); closeBudgetModal();
+  toast('บันทึกงบ '+cat+' ฿'+fmt(amt),'💰');
+}
+
+function deleteBudget(id) {
+  showConfirm('ลบงบประมาณหมวดนี้?', ()=>{
+    const b=DB.budgets.find(b=>b.id===id);
+    logAction('del','ลบงบประมาณ',b?b.name:'');
+    DB.budgets=DB.budgets.filter(b=>b.id!==id);
+    saveDB(); toast('ลบงบแล้ว','🗑️');
+  });
+}
+
+function renderBudgets() {
+  const list  = document.getElementById('budgetList');
+  const badge = document.getElementById('budgetBadge');
+  if(badge) badge.textContent=DB.budgets.length+' หมวด';
+
+  // Calc spending per category
+  const spendMap={};
+  DB.history.forEach(h=>{ if(h.type==='หัก') spendMap[h.category||'อื่นๆ']=(spendMap[h.category||'อื่นๆ']||0)+h.amount; });
+
+  let totBudget=0, totSpent=0;
+  DB.budgets.forEach(b=>{ totBudget+=b.amount; totSpent+=(spendMap[b.category]||0); });
+  const el=(id,t)=>{const e=document.getElementById(id);if(e)e.textContent=t};
+  el('bsTotalBudget','฿'+fmt(totBudget));
+  el('bsTotalSpent','฿'+fmt(totSpent));
+  el('bsTotalRemain','฿'+fmt(Math.max(0,totBudget-totSpent)));
+
+  if (!DB.budgets.length) {
+    list.innerHTML='<div class="empty-state"><span class="empty-icon">💼</span><div class="empty-title">ยังไม่ได้ตั้งงบ</div><div class="empty-sub">Admin กดปุ่ม + ด้านบน</div></div>';
+    return;
+  }
+
+  const catEmoji={ค่าสีเขียว:'💚',ค่าชุดกีฬา:'👕',ค่าอาหาร:'🍱',ค่าวัสดุ:'🛒',อื่นๆ:'📌'};
+  list.innerHTML = DB.budgets.map((b,i)=>{
+    const spent=spendMap[b.category]||0;
+    const pct=Math.round((spent/b.amount)*100);
+    const cls=pct>=100?'over':pct>=80?'warn':'ok';
+    const clrMap={ok:'var(--g1)',warn:'var(--warn)',over:'var(--red)'};
+    const remain=b.amount-spent;
+    return `<div class="budget-item" style="animation-delay:${Math.min(i*.05,.4)}s">
+      <div class="budget-top">
+        <div class="budget-info">
+          <div class="budget-name">${catEmoji[b.category]||'📌'} ${escHtml(b.name||b.category)}</div>
+          <div class="budget-cat">${escHtml(b.category)}</div>
+          ${pct>=100?'<span class="budget-over-badge">⚠️ เกินงบ!</span>':''}
+        </div>
+        <div class="budget-nums">
+          <div class="budget-spent" style="color:${clrMap[cls]}">฿${fmt(spent)}</div>
+          <div class="budget-limit">งบ ฿${fmt(b.amount)}</div>
+          <div class="budget-limit">${remain>=0?'เหลือ ฿'+fmt(remain):'เกิน ฿'+fmt(-remain)}</div>
+        </div>
+      </div>
+      <div class="budget-bar-wrap">
+        <div class="budget-bar"><div class="budget-fill ${cls}" style="width:${Math.min(pct,100)}%"></div></div>
+        <div class="budget-pct ${cls}">${pct}%</div>
+        <div class="budget-actions">
+          <button class="budget-del-btn" onclick="deleteBudget('${b.id}')" title="ลบ">✕</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  REMINDER (UNPAID LIST)
+// ══════════════════════════════════════════
+function copyUnpaidReminder() {
+  const unpaid = DB.members.filter(m=>m.status==='unpaid');
+  if (!unpaid.length) { toast('ทุกคนชำระแล้ว! 🎉','✅'); return; }
+  const paid = DB.members.filter(m=>m.status==='paid');
+  const pct = DB.members.length ? Math.round(paid.length/DB.members.length*100) : 0;
+
+  let msg = `📣 แจ้งเตือนการชำระเงินกองทุนสีเขียว\n`;
+  msg += `${'─'.repeat(32)}\n`;
+  msg += `⚠️ ยังมี ${unpaid.length} คนที่ยังไม่ชำระ!\n`;
+  msg += `✅ ชำระแล้ว ${paid.length}/${DB.members.length} คน (${pct}%)\n\n`;
+  msg += `📋 รายชื่อที่ยังไม่ชำระ:\n`;
+  unpaid.forEach((m,i)=>{
+    const colorInfo = m.color ? ` ${COLORS[m.color]?.emoji||''}` : '';
+    msg += `${i+1}. ${m.name}${m.room?' ('+m.room+')':''}${colorInfo}\n`;
+  });
+  if (DB.goalPerPerson) msg += `\n💰 จำนวนที่ต้องชำระ: ฿${fmt(DB.goalPerPerson)} ต่อคน\n`;
+  msg += `\n🙏 กรุณาชำระด่วน!\n${'─'.repeat(32)}\nFLIPCYBER Fund System`;
+
+  navigator.clipboard?.writeText(msg)
+    .then(()=>toast(`คัดลอกรายชื่อ ${unpaid.length} คนแล้ว`,'📣'))
+    .catch(()=>toast('ไม่สามารถคัดลอกได้','❌'));
+}
+
+// ══════════════════════════════════════════
+//  LOADING
+// ══════════════════════════════════════════
+let _loaded=false;
+function hideLoading() {
+  if (_loaded) return; _loaded=true;
+  const ov=document.getElementById('loadingOverlay');
+  ov.classList.add('hide');
+  setTimeout(()=>ov.style.display='none',650);
+}
+setTimeout(hideLoading,5000);
+
+// ══════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════
+const fmt = n => Number(n).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+const todayStr = () => new Date().toLocaleDateString('th-TH');
+const nowTimeStr = () => {
+  const n=new Date();
+  return n.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit',year:'2-digit'})+' '+
+         n.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+};
+const uid = () => Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const escHtml = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+function animCount(el,to,dur=1200) {
+  const from=parseFloat(el.dataset.v??'0');
+  el.dataset.v=to;
+  const s=performance.now();
+  const tick=now=>{
+    const p=Math.min((now-s)/dur,1), e=1-Math.pow(1-p,4);
+    el.textContent=fmt(from+(to-from)*e);
+    if(p<1) requestAnimationFrame(tick); else el.textContent=fmt(to);
+  };
+  requestAnimationFrame(tick);
+}
+function addRipple(e) {
+  const b=e.currentTarget, r=document.createElement('span');
+  r.className='ripple';
+  const rect=b.getBoundingClientRect(), sz=Math.max(rect.width,rect.height);
+  r.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-rect.left-sz/2}px;top:${e.clientY-rect.top-sz/2}px`;
+  b.appendChild(r); setTimeout(()=>r.remove(),600);
+}
+
+// ══════════════════════════════════════════
+//  AUTH
+// ══════════════════════════════════════════
+function openAdminLogin() {
+  ['alUser','alPass'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('alErr').textContent='';
+  document.getElementById('adminLoginOv').classList.add('show');
+  setTimeout(()=>document.getElementById('alUser').focus(),250);
+}
+function closeAdminLogin() { document.getElementById('adminLoginOv').classList.remove('show'); }
+
+function doAdminLogin() {
+  const u=document.getElementById('alUser').value.trim().toLowerCase();
+  const p=document.getElementById('alPass').value;
+  if (u!==ADMIN_USER||p!==ADMIN_PASS) {
+    const el=document.getElementById('alErr');
+    el.textContent='❌ username หรือ password ไม่ถูกต้อง';
+    document.getElementById('alPass').value='';
+    setTimeout(()=>el.textContent='',3000);
+    return;
+  }
+  session={username:u,role:'admin'};
+  closeAdminLogin();
+  logAction('login','เข้าสู่ระบบ Admin',`username: ${u}`);
+  saveDB();
+  setAdminUI(true);
+  toast('เข้าสู่ระบบ Admin สำเร็จ','✅');
+}
+
+function doLogout() {
+  logAction('login','ออกจากระบบ',`username: ${session?.username}`);
+  saveDB();
+  session=null;
+  setAdminUI(false);
+  toast('ออกจากระบบ Admin แล้ว','👋');
+}
+
+function setAdminUI(isAdmin) {
+  document.getElementById('userLabel').textContent = isAdmin ? session.username : 'สาธารณะ';
+  document.getElementById('userAvatar').textContent = isAdmin ? '👑' : '👤';
+  const pill = document.getElementById('rolePill');
+  pill.textContent = isAdmin ? 'Admin' : 'Viewer';
+  pill.className = 'role-tag' + (isAdmin ? ' admin' : '');
+  document.getElementById('btnAdminLogin').style.display = isAdmin ? 'none' : 'flex';
+  document.getElementById('btnLogout').style.display = isAdmin ? 'flex' : 'none';
+  document.getElementById('viewerBanner').style.display = isAdmin ? 'none' : 'flex';
+  document.getElementById('adminActionsSection').style.display = isAdmin ? 'block' : 'none';
+  document.getElementById('adminActions').style.display = isAdmin ? 'grid' : 'none';
+
+  // ปุ่มเป้าหมาย
+  const geb = document.getElementById('goalEditBtn');
+  geb.style.display = isAdmin ? 'flex' : 'none';
+  geb.style.pointerEvents = 'auto';
+  geb.style.zIndex = '10';
+  geb.style.position = 'relative';
+
+  document.getElementById('adminBy').style.display = isAdmin ? 'flex' : 'none';
+  document.getElementById('auditClearBtn').style.display = isAdmin ? 'block' : 'none';
+  document.getElementById('fabGroup').className = 'fab-group' + (isAdmin ? ' admin-mode' : '');
+  document.body.className = isAdmin ? 'admin-mode' : '';
+
+  // Force ให้ปุ่ม admin-mode ทั้งหมดกดได้
+  if (isAdmin) {
+    document.querySelectorAll(
+  '.cd-edit-btn, .ann-add-btn, .mem-add-btn, .mem-import-btn, .budget-add-btn, .btn-reminder'
+).forEach(el => {
+  el.style.display = 'block';
+  el.style.pointerEvents = 'auto';
+  el.style.cursor = 'pointer';
+  el.style.zIndex = '10';
+  el.style.position = 'relative';
+});
+  }
+}
+
+// ══════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════
+function showTab(name,btn) {
+  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  if(btn) btn.classList.add('active');
+  const cb={chart:()=>setTimeout(renderCharts,80),export:renderReportPreview,history:renderHistory,announce:renderAnnouncements,members:renderMembers,budget:renderBudgets,audit:renderAuditLog};
+  if(cb[name]) cb[name]();
+}
+
+// ══════════════════════════════════════════
+//  RENDER ALL
+// ══════════════════════════════════════════
+function renderAll() {
+  const {balance,total_in,total_out,history,goal,goalName,members,announcements} = DB;
+
+  animCount(document.getElementById('balDisp'),balance);
+  const pct=total_in>0?Math.min(Math.round((balance/total_in)*100),100):0;
+  document.getElementById('balPct').textContent=pct+'%';
+  setTimeout(()=>document.getElementById('balBarFill').style.width=pct+'%',100);
+  const trend=document.getElementById('balTrend');
+  trend.className='bh-trend '+(total_in>0&&(total_in-total_out)>=0?'up':'dn');
+  trend.textContent=total_in>0&&(total_in-total_out)>=0?'💚 Live':'❤️ Deficit';
+
+  const lastTxn=history.length?history[history.length-1]:null;
+  document.getElementById('txnCnt').textContent   =history.length;
+  document.getElementById('lastUpdate').textContent=new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'});
+  document.getElementById('lastBy').textContent    =lastTxn?.by||'—';
+
+  document.getElementById('goalName').textContent=goalName||'—';
+  animCount(document.getElementById('goalCurrent'),balance);
+  if (goal) {
+    document.getElementById('goalTarget').textContent=fmt(goal);
+    const gp=Math.min(Math.round((balance/goal)*100),100);
+    document.getElementById('goalPct').textContent=gp+'%';
+    setTimeout(()=>document.getElementById('goalFill').style.width=gp+'%',100);
+    const rem=goal-balance;
+    document.getElementById('goalRemaining').textContent=rem>0?`ขาดอีก ฿${fmt(rem)}`:'🎉 ถึงเป้าหมายแล้ว!';
+  } else {
+    document.getElementById('goalTarget').textContent='—';
+    document.getElementById('goalPct').textContent='0%';
+    document.getElementById('goalFill').style.width='0%';
+    document.getElementById('goalRemaining').textContent='ยังไม่ได้ตั้งเป้าหมาย';
+  }
+
+  const inItems=history.filter(h=>h.type==='เพิ่ม'), outItems=history.filter(h=>h.type==='หัก');
+  animCount(document.getElementById('sTotalIn'),total_in);
+  animCount(document.getElementById('sTotalOut'),total_out);
+  animCount(document.getElementById('sAvg'),history.length?(total_in+total_out)/history.length:0);
+  document.getElementById('sTotalInCnt').textContent=inItems.length+' รายการ';
+  document.getElementById('sTotalOutCnt').textContent=outItems.length+' รายการ';
+  document.getElementById('sTxn').textContent   =history.length;
+  document.getElementById('sToday').textContent =history.filter(h=>h.date===todayStr()).length;
+
+  const paidMem=members.filter(m=>m.status==='paid');
+  document.getElementById('sMemPaid').textContent =paidMem.length;
+  document.getElementById('sMemTotal').textContent=`จาก ${members.length} คน`;
+
+  // Per-person summary
+  const n=members.length||1;
+  const setCur=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v};
+  setCur('ppCostPerHead', members.length?'฿'+fmt(total_out/n):'—');
+  setCur('ppCollectedPerHead', members.length?'฿'+fmt(paidMem.reduce((s,m)=>s+m.amount,0)/n):'—');
+  setCur('ppGoalPerHead', DB.goalPerPerson?'฿'+fmt(DB.goalPerPerson):(goal&&members.length?'฿'+fmt(goal/n):'—'));
+  setCur('ppSpentPerHead', members.length?'฿'+fmt(total_out/n):'—');
+
+  // Team color stats
+  renderTeamColorStats();
+
+  // Announce badge
+  const annEl=document.getElementById('annNotif');
+  if(annEl){annEl.textContent=announcements.length;annEl.style.display=announcements.length?'inline-flex':'none';}
+
+  if (document.getElementById('tab-history').classList.contains('active'))  renderHistory();
+  if (document.getElementById('tab-announce').classList.contains('active')) renderAnnouncements();
+  if (document.getElementById('tab-members').classList.contains('active'))  renderMembers();
+  if (document.getElementById('tab-budget').classList.contains('active'))   renderBudgets();
+  if (document.getElementById('tab-audit').classList.contains('active'))    renderAuditLog();
+}
+
+// ══════════════════════════════════════════
+//  COLOR TEAM STATS
+// ══════════════════════════════════════════
+function renderTeamColorStats() {
+  const grid = document.getElementById('teamColorGrid');
+  if (!grid) return;
+
+  // Group members by color
+  const groups={};
+  DB.members.forEach(m=>{
+    const c=m.color||'_none';
+    if(!groups[c]) groups[c]={total:0,paid:0,amount:0};
+    groups[c].total++;
+    if(m.status==='paid'){groups[c].paid++;groups[c].amount+=m.amount||0;}
+  });
+
+  const colorKeys=Object.keys(COLORS).filter(k=>groups[k]);
+  if (!colorKeys.length) {
+    grid.innerHTML='<div class="empty-state" style="padding:20px"><span class="empty-icon" style="font-size:28px;opacity:.3">🎨</span><div class="empty-title" style="font-size:13px;color:var(--text3)">ยังไม่มีข้อมูลสี</div><div class="empty-sub" style="font-size:12px">เพิ่มสมาชิกพร้อมระบุสีฝ่าย</div></div>';
+    return;
+  }
+
+  grid.innerHTML=colorKeys.map(c=>{
+    const info=COLORS[c], g=groups[c];
+    const pct=g.total?Math.round(g.paid/g.total*100):0;
+    return `<div class="team-color-card ${c}">
+      <div class="tc-emoji">${info.emoji}</div>
+      <div class="tc-name ${c}">${info.label}</div>
+      <div class="tc-cnt">${g.total} คน · ✅ ${g.paid} คน</div>
+      <div class="tc-paid" style="color:${info.hex}">฿${fmt(g.amount)}</div>
+      <div class="tc-bar"><div class="tc-bar-fill ${c}" style="width:${pct}%"></div></div>
+      <div style="font-size:10px;color:var(--text3);margin-top:4px">${pct}% ชำระแล้ว</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  HISTORY
+// ══════════════════════════════════════════
+function renderHistory() {
+  const q  =(document.getElementById('searchQ')?.value||'').toLowerCase();
+  const ft =document.getElementById('filterType')?.value||'all';
+  const fc =document.getElementById('filterCat')?.value||'all';
+  const fd =document.getElementById('filterDate')?.value||'all';
+  const wk =new Date(Date.now()-7*86400000);
+  const items=[...DB.history].reverse().filter(h=>{
+    if(ft!=='all'&&h.type!==ft) return false;
+    if(fc!=='all'&&h.category!==fc) return false;
+    if(fd==='today'&&h.date!==todayStr()) return false;
+    if(fd==='week'&&new Date(h.dateISO||0)<wk) return false;
+    if(q&&!(['name','room','reason','category'].some(k=>(h[k]||'').toLowerCase().includes(q)))) return false;
+    return true;
+  });
+  const list=document.getElementById('historyList');
+  const badge=document.getElementById('histBadge');
+  if(badge) badge.textContent=items.length+' รายการ';
+  if(!items.length){list.innerHTML=`<div class="empty-state"><span class="empty-icon">📭</span><div class="empty-title">ไม่พบรายการ</div></div>`;return;}
+  list.innerHTML=items.map((h,i)=>{
+    const isIn=h.type==='เพิ่ม', isRst=h.type==='รีเซ็ต';
+    const dc=isRst?'rst':isIn?'in':'out',ic=isRst?'🔁':isIn?'🟢':'🔴';
+    const sign=isIn?'+':isRst?'↩':'−', vc=isRst?'rst':isIn?'in':'out';
+    const origIdx=DB.history.length-1-i;
+    const catTag=h.category?`<span class="h-cat-tag">🏷️ ${escHtml(h.category)}</span>`:'';
+    const slipLink=h.slip_url?`<a class="slip-link" href="${escHtml(h.slip_url)}" target="_blank" rel="noopener">🖼️ ดูสลิป</a>`:'';
+    return `<div class="h-item" style="animation-delay:${Math.min(i*.04,.4)}s">
+      <div class="h-dot ${dc}">${ic}</div>
+      <div class="h-info">
+        <div class="h-name">${escHtml(h.name)} <span class="h-room">· ${escHtml(h.room)}</span></div>
+        <div class="h-reason">📝 ${escHtml(h.reason)}</div>
+        ${catTag}${slipLink}
+      </div>
+      <div class="h-right">
+        <div class="h-val ${vc}">${sign}${fmt(h.amount)}</div>
+        <div class="h-time">${h.time||''}</div>
+        <button class="h-del-btn" onclick="deleteTxn(${origIdx})" title="ลบ">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function deleteTxn(idx) {
+  if(session?.role!=='admin') return;
+  const h=DB.history[idx]; if(!h) return;
+  showConfirm(`ลบรายการนี้?<br><br><strong>${h.type} ฿${fmt(h.amount)}</strong><br>${h.name} (${h.room})`,()=>{
+    const rem=DB.history.splice(idx,1)[0];
+    if(rem.type==='เพิ่ม'){DB.balance-=rem.amount;DB.total_in-=rem.amount;}
+    else if(rem.type==='หัก'){DB.balance+=rem.amount;DB.total_out-=rem.amount;}
+    DB.balance=Math.max(0,DB.balance);DB.total_in=Math.max(0,DB.total_in);DB.total_out=Math.max(0,DB.total_out);
+    logAction('del','ลบรายการ',`${rem.type} ฿${fmt(rem.amount)} — ${rem.name}`);
+    saveDB();toast('ลบรายการแล้ว','🗑️');
+  });
+}
+
+// ══════════════════════════════════════════
+//  ANNOUNCEMENTS
+// ══════════════════════════════════════════
+function openAnnModal(){['fAnnTitle','fAnnBody'].forEach(id=>document.getElementById(id).value='');document.getElementById('fAnnType').value='normal';document.getElementById('fAnnPin').checked=false;document.getElementById('annOv').classList.add('show');setTimeout(()=>document.getElementById('fAnnTitle').focus(),250);}
+function closeAnnModal(){document.getElementById('annOv').classList.remove('show');}
+
+function submitAnn() {
+  if(session?.role!=='admin'){toast('เฉพาะ Admin','🔒');return;}
+  const title=document.getElementById('fAnnTitle').value.trim();
+  const body =document.getElementById('fAnnBody').value.trim();
+  const type =document.getElementById('fAnnType').value;
+  const pin  =document.getElementById('fAnnPin').checked;
+  if(!title){toast('กรุณากรอกหัวข้อ','⚠️');return;}
+  if(!body) {toast('กรุณากรอกเนื้อหา','⚠️');return;}
+  DB.announcements.push({id:uid(),title,body,type,pinned:pin,by:session.username,time:nowTimeStr(),dateISO:new Date().toISOString()});
+  DB.announcements.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
+  logAction('add','โพสต์ประกาศ',title);
+  saveDB();closeAnnModal();toast('โพสต์ประกาศแล้ว','📣');
+}
+function deleteAnn(id){if(session?.role!=='admin')return;showConfirm('ลบประกาศนี้?',()=>{const a=DB.announcements.find(a=>a.id===id);logAction('del','ลบประกาศ',a?.title||'');DB.announcements=DB.announcements.filter(a=>a.id!==id);saveDB();toast('ลบประกาศแล้ว','🗑️');});}
+function togglePinAnn(id){if(session?.role!=='admin')return;const a=DB.announcements.find(a=>a.id===id);if(!a)return;a.pinned=!a.pinned;DB.announcements.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));logAction('edit','toggle ปักหมุด',a.title);saveDB();toast(a.pinned?'ปักหมุดแล้ว':'ยกเลิกหมุดแล้ว','📌');}
+
+function renderAnnouncements() {
+  const list=document.getElementById('annList');
+  const badge=document.getElementById('annBadge');
+  if(badge)badge.textContent=DB.announcements.length+' ประกาศ';
+  if(!DB.announcements.length){list.innerHTML=`<div class="empty-state"><span class="empty-icon">📢</span><div class="empty-title">ยังไม่มีประกาศ</div></div>`;return;}
+  const typeLblMap={normal:'📢 ทั่วไป',important:'🚨 สำคัญ',info:'ℹ️ แจ้งข้อมูล'};
+  list.innerHTML=DB.announcements.map((a,i)=>`
+    <div class="ann-item${a.pinned?' pinned':''}" style="animation-delay:${Math.min(i*.05,.4)}s">
+      <div class="ann-top">
+        <div class="ann-meta">
+          ${a.pinned?'<span class="ann-pin-badge">📌 ปักหมุด</span>':''}
+          <span class="ann-type-badge ${a.type||'normal'}">${typeLblMap[a.type]||'📢'}</span>
+          <span class="ann-by">โดย ${escHtml(a.by)}</span>
+        </div>
+        <div class="ann-actions">
+          <button class="ann-pin-btn" onclick="togglePinAnn('${a.id}')">${a.pinned?'📍':'📌'}</button>
+          <button class="ann-del-btn" onclick="deleteAnn('${a.id}')">✕</button>
+        </div>
+      </div>
+      <div class="ann-title">${escHtml(a.title)}</div>
+      <div class="ann-body">${escHtml(a.body)}</div>
+      <div class="ann-footer">🕐 ${a.time||''}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+//  MEMBERS
+// ══════════════════════════════════════════
+function openAddMemberModal(){['fMemName','fMemRoom','fMemAmt'].forEach(id=>document.getElementById(id).value='');document.getElementById('fMemStatus').value='unpaid';document.getElementById('fMemColor').value='';document.getElementById('fMemAmtGrp').style.display='none';document.getElementById('addMemberOv').classList.add('show');setTimeout(()=>document.getElementById('fMemName').focus(),250);}
+function closeAddMemberModal(){document.getElementById('addMemberOv').classList.remove('show');}
+
+function submitAddMember() {
+  if(session?.role!=='admin'){toast('เฉพาะ Admin','🔒');return;}
+  const name  =document.getElementById('fMemName').value.trim();
+  const room  =document.getElementById('fMemRoom').value.trim();
+  const color =document.getElementById('fMemColor').value;
+  const status=document.getElementById('fMemStatus').value;
+  const amt   =parseFloat(document.getElementById('fMemAmt').value)||0;
+  if(!name){toast('กรุณากรอกชื่อ','⚠️');return;}
+  DB.members.push({id:uid(),name,room,color,status,amount:status==='paid'?amt:0,paidAt:status==='paid'?nowTimeStr():''});
+  logAction('add','เพิ่มสมาชิก',`${name} (${room||'—'}) สี ${color||'ไม่ระบุ'}`);
+  saveDB();closeAddMemberModal();toast('เพิ่มสมาชิก: '+name,'✅');
+}
+
+function openImportMembersModal(){document.getElementById('fImportText').value='';document.getElementById('fImportRoom').value='';document.getElementById('fImportColor').value='';document.getElementById('importPreview').textContent='';document.getElementById('importMembersOv').classList.add('show');}
+function closeImportMembersModal(){document.getElementById('importMembersOv').classList.remove('show');}
+
+function submitImportMembers() {
+  if(session?.role!=='admin'){toast('เฉพาะ Admin','🔒');return;}
+  const text    =document.getElementById('fImportText').value.trim();
+  const defRoom =document.getElementById('fImportRoom').value.trim();
+  const defColor=document.getElementById('fImportColor').value;
+  if(!text){toast('กรุณากรอกรายชื่อ','⚠️');return;}
+  const lines=text.split('\n').map(l=>l.trim()).filter(l=>l);
+  let added=0;
+  lines.forEach(line=>{
+    const parts=line.split(',').map(p=>p.trim());
+    const name=parts[0],room=parts[1]||defRoom,color=parts[2]||defColor;
+    if(name){DB.members.push({id:uid(),name,room,color,status:'unpaid',amount:0,paidAt:''});added++;}
+  });
+  logAction('add','นำเข้าสมาชิก',`${added} คน`);
+  saveDB();closeImportMembersModal();toast(`นำเข้า ${added} คนสำเร็จ`,'✅');
+}
+
+function toggleMemberStatus(id) {
+  if(session?.role!=='admin'){toast('เฉพาะ Admin','🔒');return;}
+  const m=DB.members.find(m=>m.id===id);if(!m)return;
+  if(m.status==='unpaid'){
+    const amt=prompt('จำนวนที่ชำระ (บาท):');
+    if(amt===null)return;
+    m.status='paid';m.amount=parseFloat(amt)||0;m.paidAt=nowTimeStr();
+    logAction('edit','อัปเดตสถานะสมาชิก',`${m.name} → ✅ ชำระ ฿${fmt(m.amount)}`);
+    toast(m.name+' ✅ ชำระแล้ว','💚');
+  } else {
+    m.status='unpaid';m.amount=0;m.paidAt='';
+    logAction('edit','อัปเดตสถานะสมาชิก',`${m.name} → ⏳ ยกเลิก`);
+    toast(m.name+' ⏳ ยกเลิกการชำระ','🔄');
+  }
+  saveDB();
+}
+
+function deleteMember(id){
+  if(session?.role!=='admin')return;
+  const m=DB.members.find(m=>m.id===id);if(!m)return;
+  showConfirm(`ลบ <strong>${escHtml(m.name)}</strong>?`,()=>{
+    logAction('del','ลบสมาชิก',m.name);
+    DB.members=DB.members.filter(m=>m.id!==id);
+    saveDB();toast('ลบสมาชิกแล้ว','🗑️');
+  });
+}
+
+function renderMembers() {
+  const q  =(document.getElementById('memSearch')?.value||'').toLowerCase();
+  const fs =document.getElementById('memFilterStatus')?.value||'all';
+  const fc =document.getElementById('memFilterColor')?.value||'all';
+  const members=DB.members;
+  const paid=members.filter(m=>m.status==='paid');
+  document.getElementById('memTotalNum').textContent =members.length;
+  document.getElementById('memPaidNum').textContent  =paid.length;
+  document.getElementById('memUnpaidNum').textContent=members.filter(m=>m.status==='unpaid').length;
+  document.getElementById('memBadge').textContent    =members.length+' คน';
+  const pct=members.length?Math.round(paid.length/members.length*100):0;
+  const ring=document.getElementById('ringFill');
+  if(ring)ring.style.strokeDashoffset=427.26-(427.26*pct/100);
+  document.getElementById('ringPctText').textContent=pct+'%';
+  document.getElementById('memPctBadge').textContent=pct+'%';
+  const totalCollected=paid.reduce((s,m)=>s+m.amount,0);
+  document.getElementById('memTotalCollected').textContent='฿'+fmt(totalCollected);
+  document.getElementById('memTargetPerPerson').textContent=DB.goalPerPerson?'฿'+fmt(DB.goalPerPerson):'—';
+
+  const filtered=members.filter(m=>{
+    if(fs!=='all'&&m.status!==fs)return false;
+    if(fc!=='all'&&m.color!==fc)return false;
+    if(q&&!m.name.toLowerCase().includes(q)&&!m.room.toLowerCase().includes(q))return false;
+    return true;
+  });
+  const list=document.getElementById('memberList');
+  if(!filtered.length){list.innerHTML=`<div class="empty-state"><span class="empty-icon">👤</span><div class="empty-title">ไม่พบสมาชิก</div></div>`;return;}
+  list.innerHTML=filtered.map((m,i)=>{
+    const isPaid=m.status==='paid';
+    const colorInfo=m.color&&COLORS[m.color]?`<span class="color-badge ${m.color}">${COLORS[m.color].emoji} ${COLORS[m.color].label}</span>`:'';
+    const amtTxt=isPaid&&m.amount?`<div class="mem-paid-amt">฿${fmt(m.amount)}</div>`:'';
+    const timeTxt=isPaid&&m.paidAt?`<div class="mem-sub">${m.paidAt}</div>`:'';
+    return `<div class="mem-item" style="animation-delay:${Math.min(i*.03,.4)}s">
+      <div class="mem-num">${i+1}</div>
+      <div class="mem-info">
+        <div class="mem-name">${escHtml(m.name)}</div>
+        <div class="mem-sub">${escHtml(m.room||'—')}${m.color?' · ':''}</div>
+        ${colorInfo}${amtTxt}${timeTxt}
+      </div>
+      <div class="mem-right">
+        <button class="mem-status-btn ${m.status}" onclick="toggleMemberStatus('${m.id}')">${isPaid?'✅ ชำระแล้ว':'⏳ ยังไม่ชำระ'}</button>
+        <button class="mem-del-btn" onclick="deleteMember('${m.id}')" title="ลบ">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+//  CHARTS
+// ══════════════════════════════════════════
+const CG={grid:'rgba(0,255,135,0.06)',tick:'#4e8566',font:{size:11,family:'Kanit'}};
+function renderCharts(){renderBarChart();renderLineChart();renderDonutChart();renderCatChart();}
+
+function renderBarChart(){
+  const days=[],inMap={},outMap={};
+  for(let i=6;i>=0;i--){const d=new Date(Date.now()-i*86400000);const k=d.toLocaleDateString('th-TH',{day:'2-digit',month:'2-digit'});days.push(k);inMap[k]=0;outMap[k]=0;}
+  DB.history.forEach(h=>{if(h.date in inMap){if(h.type==='เพิ่ม')inMap[h.date]+=h.amount;else if(h.type==='หัก')outMap[h.date]+=h.amount;}});
+  if(charts.bar)charts.bar.destroy();
+  charts.bar=new Chart(document.getElementById('chartDaily').getContext('2d'),{type:'bar',data:{labels:days,datasets:[{label:'รายรับ',data:days.map(d=>inMap[d]),backgroundColor:'rgba(0,255,135,0.55)',borderColor:'#00ff87',borderWidth:1.5,borderRadius:5},{label:'รายจ่าย',data:days.map(d=>outMap[d]),backgroundColor:'rgba(255,77,109,0.45)',borderColor:'#ff4d6d',borderWidth:1.5,borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'฿'+fmt(ctx.raw)}}},scales:{x:{ticks:{color:CG.tick,font:CG.font},grid:{color:CG.grid}},y:{ticks:{color:CG.tick,font:CG.font,callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v},grid:{color:CG.grid},border:{display:false}}}}});
+}
+
+function renderLineChart(){
+  const pts=[];let running=0;
+  const sorted=[...DB.history].sort((a,b)=>new Date(a.dateISO||0)-new Date(b.dateISO||0));
+  sorted.forEach(h=>{if(h.type==='เพิ่ม')running+=h.amount;else if(h.type==='หัก')running-=h.amount;pts.push({x:h.time||h.date,y:Math.max(0,running)});});
+  if(!pts.length)pts.push({x:'—',y:0});
+  if(charts.line)charts.line.destroy();
+  charts.line=new Chart(document.getElementById('chartLine').getContext('2d'),{type:'line',data:{labels:pts.map(p=>p.x),datasets:[{label:'ยอดคงเหลือ',data:pts.map(p=>p.y),borderColor:'#00b4ff',backgroundColor:'rgba(0,180,255,0.08)',borderWidth:2,pointRadius:3,pointHoverRadius:6,fill:true,tension:.35,pointBackgroundColor:'#00b4ff',pointBorderColor:'#040d08',pointBorderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>'฿'+fmt(ctx.raw)}}},scales:{x:{ticks:{color:CG.tick,font:CG.font,maxTicksLimit:6},grid:{display:false}},y:{ticks:{color:CG.tick,font:CG.font,callback:v=>v>=1000?(v/1000).toFixed(1)+'k':v},grid:{color:CG.grid},border:{display:false}}}}});
+}
+
+function renderDonutChart(){
+  if(charts.donut)charts.donut.destroy();
+  charts.donut=new Chart(document.getElementById('chartDonut').getContext('2d'),{type:'doughnut',data:{labels:['รับเข้า','จ่ายออก','คงเหลือ'],datasets:[{data:[DB.total_in||0,DB.total_out||0,DB.balance||0],backgroundColor:['rgba(0,255,135,0.75)','rgba(255,77,109,0.65)','rgba(0,180,255,0.6)'],borderColor:['#00ff87','#ff4d6d','#00b4ff'],borderWidth:2,hoverOffset:10}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ฿${fmt(ctx.raw)}`}}}}});
+}
+
+function renderCatChart(){
+  const catMap={};
+  DB.history.forEach(h=>{if(h.type==='หัก'){const c=h.category||'ไม่ระบุ';catMap[c]=(catMap[c]||0)+h.amount;}});
+  const labels=Object.keys(catMap),vals=Object.values(catMap);
+  if(!labels.length)return;
+  const colors=['rgba(0,255,135,0.7)','rgba(255,77,109,0.7)','rgba(0,180,255,0.7)','rgba(255,215,0,0.7)','rgba(192,132,252,0.7)','rgba(255,140,0,0.7)'];
+  if(charts.cat)charts.cat.destroy();
+  charts.cat=new Chart(document.getElementById('chartCat').getContext('2d'),{type:'doughnut',data:{labels,datasets:[{data:vals,backgroundColor:colors.slice(0,labels.length),borderColor:colors.map(c=>c.replace('0.7','1')),borderWidth:2,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{color:'#9dd4b0',font:{family:'Kanit',size:12},padding:12}},tooltip:{callbacks:{label:ctx=>`${ctx.label}: ฿${fmt(ctx.raw)}`}}}}});
+}
+
+// ══════════════════════════════════════════
+//  TXN MODAL
+// ══════════════════════════════════════════
+function openTxnModal(mode){
+  txnMode=mode;const isAdd=mode==='add';
+  document.getElementById('txnTitle').textContent=isAdd?'💚 เพิ่มรายรับ':'❤️ หักรายจ่าย';
+  document.getElementById('txnTitle').style.color=isAdd?'var(--g1)':'var(--red)';
+  document.getElementById('txnSub').textContent=isAdd?'บันทึกเงินรับเข้ากองทุน':'บันทึกเงินจ่ายออกจากกองทุน';
+  const sb=document.getElementById('txnSubmitBtn');
+  sb.className='btn-submit '+(isAdd?'add':'ded');
+  sb.textContent=isAdd?'✅ บันทึกรายรับ':'🔴 บันทึกรายจ่าย';
+  const prev=document.getElementById('amtPreviewVal');
+  prev.textContent='฿ 0.00';prev.className='amount-preview-val'+(isAdd?'':' ded');
+  ['fAmt','fName','fRoom','fReason','fSlip'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('fCat').value='ค่าสีเขียว';
+  document.getElementById('slipPreviewImg').style.display='none';
+  document.getElementById('txnOv').classList.add('show');
+  setTimeout(()=>document.getElementById('fAmt').focus(),250);
+}
+function closeTxnModal(){document.getElementById('txnOv').classList.remove('show');}
+function updateAmtPreview(){const v=parseFloat(document.getElementById('fAmt').value)||0;document.getElementById('amtPreviewVal').textContent='฿ '+fmt(v);}
+function previewSlip(){const url=document.getElementById('fSlip').value.trim();const img=document.getElementById('slipPreviewImg');if(url&&(url.startsWith('http://')||url.startsWith('https://'))){img.src=url;img.style.display='block';img.onerror=()=>img.style.display='none';}else img.style.display='none';}
+
+function submitTxn(){
+  if(session?.role!=='admin'){toast('เฉพาะ Admin','🔒');return;}
+  const amt   =parseFloat(document.getElementById('fAmt').value);
+  const name  =document.getElementById('fName').value.trim();
+  const room  =document.getElementById('fRoom').value.trim();
+  const cat   =document.getElementById('fCat').value;
+  const reason=document.getElementById('fReason').value.trim();
+  const slip  =document.getElementById('fSlip').value.trim();
+  if(!amt||amt<=0){toast('กรุณากรอกจำนวนเงิน','⚠️');return;}
+  if(!name){toast('กรุณากรอกชื่อ','⚠️');return;}
+  if(!room){toast('กรุณากรอกห้อง','⚠️');return;}
+  if(!reason){toast('กรุณากรอกเหตุผล','⚠️');return;}
+  if(txnMode==='ded'&&amt>DB.balance){toast('ยอดเงินไม่เพียงพอ (฿'+fmt(DB.balance)+')','❌');return;}
+  const isAdd=txnMode==='add';
+  const now=new Date();
+  const dateStr=now.toLocaleDateString('th-TH');
+  const timeStr=nowTimeStr();
+  const txnId='TX-'+uid().toUpperCase();
+  if(isAdd){DB.balance+=amt;DB.total_in+=amt;}else{DB.balance-=amt;DB.total_out+=amt;}
+  DB.history.push({type:isAdd?'เพิ่ม':'หัก',amount:amt,name,room,category:cat,reason,slip_url:slip,time:timeStr,date:dateStr,dateISO:now.toISOString(),by:session.username,txnId});
+
+  // Check budget warning
+  if (!isAdd) {
+    const budget=DB.budgets.find(b=>b.category===cat);
+    if (budget) {
+      const spent=DB.history.filter(h=>h.type==='หัก'&&h.category===cat).reduce((s,h)=>s+h.amount,0);
+      if (spent>=budget.amount) toast(`⚠️ เกินงบ "${cat}" แล้ว!`,'❌');
+      else if (spent/budget.amount>=0.8) toast(`⚠️ ใช้งบ "${cat}" ไปแล้ว ${Math.round(spent/budget.amount*100)}%`,'⚠️');
+    }
+  }
+
+  logAction('add',isAdd?'เพิ่มรายรับ':'หักรายจ่าย',`฿${fmt(amt)} — ${name} (${cat})`);
+  saveDB();closeTxnModal();
+  lastReceiptData={type:isAdd?'in':'out',amt,name,room,cat,reason,time:timeStr,by:session.username,txnId,balAfter:DB.balance};
+  showReceipt(lastReceiptData);
+}
+
+// ══════════════════════════════════════════
+//  RECEIPT
+// ══════════════════════════════════════════
+function showReceipt(d){
+  const isIn=d.type==='in';
+  document.getElementById('receiptTypeBadge').textContent=isIn?'✅ รายรับ':'🔴 รายจ่าย';
+  document.getElementById('receiptTypeBadge').className='receipt-type-badge '+(isIn?'in':'out');
+  document.getElementById('receiptAmt').textContent=(isIn?'+':'-')+fmt(d.amt);
+  document.getElementById('receiptAmt').className='receipt-amt-val '+(isIn?'in':'out');
+  document.getElementById('receiptBalance').textContent='฿'+fmt(d.balAfter);
+  document.getElementById('receiptId').textContent=d.txnId;
+  document.getElementById('receiptRows').innerHTML=[
+    ['👤 ผู้ดำเนินการ',d.name],['🏫 ห้อง',d.room],['🏷️ หมวดหมู่',d.cat||'—'],
+    ['📝 เหตุผล',d.reason],['🕐 เวลา',d.time],['👑 บันทึกโดย',d.by]
+  ].map(([l,v])=>`<div class="receipt-row"><span class="receipt-row-label">${l}</span><span class="receipt-row-val">${escHtml(String(v||'—'))}</span></div>`).join('');
+  document.getElementById('receiptOv').classList.add('show');
+}
+function closeReceipt(){document.getElementById('receiptOv').classList.remove('show');}
+function copyReceiptText(){
+  if(!lastReceiptData)return;
+  const d=lastReceiptData,isIn=d.type==='in';
+  const text=`🧾 ใบเสร็จกองทุนเงินค่าสีเขียว\n${'─'.repeat(30)}\n${isIn?'✅ รายรับ':'🔴 รายจ่าย'}: ฿${fmt(d.amt)}\n👤 ${d.name} (${d.room})\n🏷️ ${d.cat||'—'}\n📝 ${d.reason}\n🕐 ${d.time}\n💰 ยอดคงเหลือ: ฿${fmt(d.balAfter)}\n${d.txnId}\nFLIPCYBER Fund System`;
+  navigator.clipboard?.writeText(text).then(()=>toast('คัดลอกใบเสร็จแล้ว','📋')).catch(()=>toast('ไม่สามารถคัดลอก','❌'));
+}
+
+// ══════════════════════════════════════════
+//  GOAL
+// ══════════════════════════════════════════
+function openGoalModal(){document.getElementById('fGoal').value=DB.goal||'';document.getElementById('fGoalName').value=DB.goalName||'';document.getElementById('fGoalPerPerson').value=DB.goalPerPerson||'';document.getElementById('goalOv').classList.add('show');}
+function closeGoalModal(){document.getElementById('goalOv').classList.remove('show');}
+function saveGoal(){
+  const g=parseFloat(document.getElementById('fGoal').value);
+  const n=document.getElementById('fGoalName').value.trim();
+  const pp=parseFloat(document.getElementById('fGoalPerPerson').value)||0;
+  if(!g||g<=0){toast('กรุณากรอกยอดเป้าหมาย','⚠️');return;}
+  DB.goal=g;DB.goalName=n;DB.goalPerPerson=pp;
+  logAction('edit','ตั้งเป้าหมาย',`฿${fmt(g)}${n?' — '+n:''}`);
+  saveDB();closeGoalModal();toast('บันทึกเป้าหมาย ฿'+fmt(g),'🎯');
+}
+
+// ══════════════════════════════════════════
+//  RESET
+// ══════════════════════════════════════════
+function openReset(){document.getElementById('resetOv').classList.add('show');}
+function closeReset(){document.getElementById('resetOv').classList.remove('show');}
+function confirmReset(mode){
+  closeReset();
+  const msgs={balance:'รีเซ็ตยอดเงินเป็น 0 (เก็บประวัติ)',all:'<strong>ลบทุกอย่าง</strong> — ไม่สามารถย้อนกลับได้',members:'ล้าง<strong>รายชื่อสมาชิก</strong>ทั้งหมด',budgets:'ล้าง<strong>งบประมาณ</strong>ทั้งหมด'};
+  showConfirm(msgs[mode]||'ยืนยัน?',()=>doReset(mode));
+}
+function doReset(mode){
+  if(session?.role!=='admin'){toast('เฉพาะ Admin','🔒');return;}
+  if(mode==='all')DB={balance:0,total_in:0,total_out:0,history:[],goal:DB.goal,goalName:DB.goalName,goalPerPerson:DB.goalPerPerson,announcements:DB.announcements,members:DB.members,budgets:DB.budgets,eventDate:DB.eventDate,eventName:DB.eventName,auditLog:DB.auditLog};
+  else if(mode==='balance'){
+    DB.history.push({type:'รีเซ็ต',amount:DB.balance,name:session.username,room:'—',reason:'รีเซ็ตยอด ฿'+fmt(DB.balance)+' → 0',time:nowTimeStr(),date:todayStr(),dateISO:new Date().toISOString(),by:session.username,txnId:'RST-'+uid()});
+    DB.balance=0;DB.total_in=0;DB.total_out=0;
+  }
+  else if(mode==='members')DB.members=[];
+  else if(mode==='budgets')DB.budgets=[];
+  logAction('reset','รีเซ็ต',mode);
+  saveDB();toast('รีเซ็ตสำเร็จ','🔁');
+}
+
+// ══════════════════════════════════════════
+//  CONFIRM
+// ══════════════════════════════════════════
+function showConfirm(msg,onYes){document.getElementById('confirmMsg').innerHTML=msg;document.getElementById('confirmOv').classList.add('show');document.getElementById('confirmYes').onclick=()=>{closeConfirm();onYes();};}
+function closeConfirm(){document.getElementById('confirmOv').classList.remove('show');}
+
+// ══════════════════════════════════════════
+//  EXPORT
+// ══════════════════════════════════════════
+function exportCSV(){
+  const rows=[['ประเภท','หมวดหมู่','จำนวนเงิน','ชื่อ','ห้อง','เหตุผล','เวลา','บันทึกโดย','TX-ID']];
+  DB.history.forEach(h=>rows.push([h.type,h.category||'',h.amount,h.name,h.room,h.reason,h.time||'',h.by||'',h.txnId||'']));
+  dlFile('\ufeff'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n'),'fund_history.csv','text/csv');
+  toast('Export CSV สำเร็จ','📄');
+}
+function exportJSON(){dlFile(JSON.stringify(DB,null,2),'fund_data.json','application/json');toast('Export JSON สำเร็จ','🗂️');}
+function exportTxt(){dlFile(buildReport(),'fund_report.txt','text/plain;charset=utf-8');toast('Export TXT สำเร็จ','📝');}
+function copyReport(){navigator.clipboard?.writeText(buildReport()).then(()=>toast('คัดลอกแล้ว!','📋')).catch(()=>toast('ไม่สามารถคัดลอก','❌'));}
+function renderReportPreview(){document.getElementById('reportPreview').textContent=buildReport();}
+
+function exportMembersCSV(){
+  const rows=[['#','ชื่อ','ห้อง','สี','สถานะ','จำนวนที่ชำระ','เวลาที่ชำระ']];
+  DB.members.forEach((m,i)=>rows.push([i+1,m.name,m.room,COLORS[m.color]?.label||'—',m.status==='paid'?'ชำระแล้ว':'ยังไม่ชำระ',m.amount||0,m.paidAt||'']));
+  dlFile('\ufeff'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n'),'members_status.csv','text/csv');
+  toast('Export สมาชิกสำเร็จ','👥');
+}
+
+function exportBudgetCSV(){
+  const spendMap={};
+  DB.history.forEach(h=>{if(h.type==='หัก')spendMap[h.category||'อื่นๆ']=(spendMap[h.category||'อื่นๆ']||0)+h.amount;});
+  const rows=[['หมวดหมู่','ชื่องบ','งบประมาณ','ใช้ไป','เหลือ','เปอร์เซ็นต์']];
+  DB.budgets.forEach(b=>{const s=spendMap[b.category]||0;rows.push([b.category,b.name,b.amount,s,Math.max(0,b.amount-s),Math.round(s/b.amount*100)+'%']);});
+  dlFile('\ufeff'+rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n'),'budgets.csv','text/csv');
+  toast('Export งบประมาณสำเร็จ','💰');
+}
+
+function buildReport(){
+  const {balance,total_in,total_out,history,goal,goalName,members,budgets}=DB;
+  const now=new Date().toLocaleString('th-TH');
+  const pct=total_in>0?Math.round((balance/total_in)*100):0;
+  const bars='█'.repeat(Math.round(pct/10))+'░'.repeat(10-Math.round(pct/10));
+  const paid=members.filter(m=>m.status==='paid');
+  let r=`╔══════════════════════════════════════╗\n║   💚  กองทุนเงินค่าสีเขียว 💚     ║\n║         FLIPCYBER  v6.0            ║\n╚══════════════════════════════════════╝\n\n`;
+  r+=`ยอดคงเหลือ    : ฿${fmt(balance)}\nรับเข้าทั้งหมด  : ฿${fmt(total_in)}\nจ่ายออกทั้งหมด : ฿${fmt(total_out)}\nจำนวนรายการ   : ${history.length} รายการ\n`;
+  if(goal)r+=`เป้าหมาย      : ฿${fmt(goal)}${goalName?' ('+goalName+')':''} (${Math.min(Math.round((balance/goal)*100),100)}%)\n`;
+  r+=`สัดส่วน       : ${bars} ${pct}%\n`;
+  if(members.length){
+    r+=`\nสมาชิก        : ชำระแล้ว ${paid.length}/${members.length} คน\n`;
+    // Color breakdown
+    const cGroups={};
+    members.forEach(m=>{const c=m.color||'ไม่ระบุ';if(!cGroups[c])cGroups[c]={total:0,paid:0};cGroups[c].total++;if(m.status==='paid')cGroups[c].paid++;});
+    Object.entries(cGroups).forEach(([c,g])=>{const info=COLORS[c];r+=`  ${info?info.emoji+info.label:c}: ${g.paid}/${g.total}\n`;});
+  }
+  if(budgets.length){
+    const spendMap={};
+    history.forEach(h=>{if(h.type==='หัก')spendMap[h.category||'อื่นๆ']=(spendMap[h.category||'อื่นๆ']||0)+h.amount;});
+    r+=`\nงบประมาณ:\n`;
+    budgets.forEach(b=>{const s=spendMap[b.category]||0;const pp=Math.round(s/b.amount*100);r+=`  ${b.category}: ฿${fmt(s)}/฿${fmt(b.amount)} (${pp}%)${pp>=100?' ⚠️เกินงบ!':''}\n`;});
+  }
+  r+=`\nอัปเดต: ${now}\n${'─'.repeat(40)}\n\nประวัติล่าสุด 10 รายการ:\n`;
+  [...history].reverse().slice(0,10).forEach((h,i)=>{const s=h.type==='เพิ่ม'?'+':'−';r+=`\n${i+1}. [${h.type}${h.category?' - '+h.category:''}] ${s}฿${fmt(h.amount)}\n   👤 ${h.name} (${h.room})\n   📝 ${h.reason}\n   🕐 ${h.time||''}\n`;});
+  r+=`\n${'═'.repeat(40)}\nFLIPCYBER Fund System v6.0`;
+  return r;
+}
+function dlFile(content,name,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type}));a.download=name;a.click();URL.revokeObjectURL(a.href);}
+
+// ══════════════════════════════════════════
+//  TOAST
+// ══════════════════════════════════════════
+function toast(msg,icon='✅'){
+  const area=document.getElementById('toastArea');
+  const el=document.createElement('div');el.className='toast';
+  el.innerHTML=`<span style="font-size:18px;flex-shrink:0">${icon}</span><span style="flex:1">${msg}</span>`;
+  area.appendChild(el);
+  setTimeout(()=>{el.classList.add('fade-out');setTimeout(()=>el.remove(),320);},2800);
+}
+
+// ══════════════════════════════════════════
+//  FAB
+// ══════════════════════════════════════════
+let _fabTimer;
+function toggleFab(force=null){
+  fabOpen=force===false?false:!fabOpen;
+  const fabs=document.getElementById('fabGroup').querySelectorAll('.fab:not(.fab-main)');
+  const main=document.getElementById('fabMain');
+  fabs.forEach(f=>f.classList.toggle('show',fabOpen));
+  main.style.transform=fabOpen?'rotate(45deg)':'';
+  main.style.background=fabOpen?'linear-gradient(145deg,#6b1020,#c0273f)':'';
+  clearTimeout(_fabTimer);
+  if(fabOpen)_fabTimer=setTimeout(()=>toggleFab(false),5000);
+}
+
+// ══════════════════════════════════════════
+//  PARTICLES
+// ══════════════════════════════════════════
+function createParticles(){
+  const wrap=document.getElementById('particles');
+  for(let i=0;i<28;i++){
+    const p=document.createElement('div');p.className='particle';
+    const sz=Math.random()*4+1.5,g=Math.floor(100+Math.random()*155);
+    p.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;background:rgba(0,${g},${Math.floor(g*.6)},${.3+Math.random()*.5});animation-duration:${9+Math.random()*14}s;animation-delay:${Math.random()*12}s`;
+    wrap.appendChild(p);
+  }
+}
+
+// ══════════════════════════════════════════
+//  EVENTS
+// ══════════════════════════════════════════
+document.querySelectorAll('.ov').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('show');}));
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){document.querySelectorAll('.ov.show').forEach(o=>o.classList.remove('show'));if(fabOpen)toggleFab(false);}
+  if(e.ctrlKey&&e.key==='a'&&session?.role==='admin'){e.preventDefault();openTxnModal('add');}
+  if(e.ctrlKey&&e.key==='d'&&session?.role==='admin'){e.preventDefault();openTxnModal('ded');}
+});
+document.addEventListener('input',e=>{
+  if(e.target.id==='fImportText'){
+    const lines=e.target.value.trim().split('\n').filter(l=>l.trim());
+    const el=document.getElementById('importPreview');
+    if(el)el.textContent=lines.length?`พบ ${lines.length} รายชื่อ`:'';
+  }
+});
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+createParticles();
+renderReportPreview();
+</script>
+</body>
+</html>
